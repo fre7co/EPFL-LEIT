@@ -1,0 +1,64 @@
+« A quoi ça sert ? » 
+ 
+CPU :Core Processing unit : fait tous les calculs logiques
+ 
+Carte mère : La carte mère est le circuit imprimé principal qui relie et fait communiquer tous les composants essentiels d'un ordinateur (processeur, RAM, stockage, cartes graphiques). Elle distribue l'alimentation électrique et synchronise les échanges de données, agissant comme la colonne vertébrale qui assure le fonctionnement cohérent de l'ensemble du système.
+ 
+GPU : Graphics processing unit : La carte graphique est un composant matériel dédié au traitement et à l'affichage des images, vidéos et animations sur l'écran. Elle soulage le processeur principal en effectuant les calculs complexes nécessaires au rendu visuel, ce qui est crucial pour les jeux vidéo, la conception 3D et le montage vidéo. Elle peut être intégrée directement à la carte mère ou au processeur, ou bien constituer une carte indépendante plus puissante.
+ 
+RAM : La RAM (mémoire vive) est une mémoire temporaire et ultra-rapide qui stocke les données des programmes en cours d'utilisation. Elle permet au processeur d'accéder instantanément aux informations nécessaires, mais son contenu s'efface complètement dès que l'appareil est éteint.
+ 
+SSD vs HDD -> Solid state Drive / Hard disk drive -> Le HDD utilise des plateaux magnétiques rotatifs et une tête de lecture mécanique (comme un tourne-disque), tandis que le SSD repose sur des puces de mémoire flash électronique, sans aucune pièce mobile.
+ 
+PSU
+ 
+FAN : ventilateurs qui refroidissent le pc
+ 
+1. J’arrive à expliquer les différences entre un disque SSD, HDD et une Carte SD:
+le SSD pour la vitesse (système), le HDD pour la capacité de stockage économique (archives), et la carte SD pour la portabilité et l'extension dans les petits appareils.
+ 
+2. Je sais quel calcul utiliser afin d’acheter la bonne alimentation
+ 
+Puissance Requise=(Somme des Watts)×1,3
+ 
+3. Les éléments cités dans ma documentation sont publiés dans mon portfolio:
+ 
+4. J’arrive à expliquer la différence entre un water cooling et un air cooling:
+Un watercooling utilise un refroidissement à l’eau, alors que le aircooling utilise un système de ventilation.
+ 
+5. J’ai testé le site « CanYouRunIT » et comprends comment ça marche.
+ 
+C’est un site qui permet de voir si notre ordinateur peut faire tourner des logiciels ou des jeux et les pré requit.
+ 
+Can You RUN It | Can I Run It | Can My PC Run It
+ 
+6. Sur Galaxus, j’ai créé ma composition pour mon prochain PC gameur a. Budget 500 – 1000~.-
+ 
+https://www.buildcores.com/setup/zzHwHdC3j
+ 
+Lundi :
+On a monté et démonter un ordi et un laptop, et je n’ai pas trop appris de chose à part sur les laptops, ou je ne savais pas forcément où était les composants mais maintenant c’est bon.
+ 
+On à créer un build comme montrer au-dessus d’un ordinateur, optimiser pour faire tourner « des jeux de graphisme et outils comme Adobe premier pro, after effect à une certaine fluidité.
+On à aussi vu le site Roadmap, qui me donne vraiment envie d’en apprendre plus, et je compte bien en apprendre.
+ 
+RJ45 : on a appris comment créer et à quoi servait les câbles réseaux, les câbles sont super solides, et le débit maximal est de 10gb/s et il est aussi interdit de partager sa connexion à ses voisins par exemple.
+ 
+Mais il n’y a pas que le RJ45, il y a aussi :
+ 
+Wifi : Mobilité sur quelques mètres.
+Fibre Optique : Transmission grande distance.
+5G : Mobilité grandes distances.
+Coaxial : Transmission grandes distances.
+USB : Transmission courte distance.
+Câble droit est fait pour lire de PC à switch, switch à routeur etc, alors que le câble croisé est fait pour lire par exemple du PC à PC ou du switch à switch.
+ 
+Les catégories désignent aussi le niveau de débit et de blindage, plus la catégorie est haute, plus elle sera qualitative.
+ 
+Il existe aussi bien nombre de normes qui permette de définir quel câble est utilisé pour quel sorte d’usage.
+J’ai créé un câble RJ45 et j’ai su dans quel ordre allait les câbles et quel câble couper. A gauche orange à droite brun et fleuve au milieu de la forêt.
+ 
+ 
+Can You RUN It | Can I Run It | Can My PC Run It
+What games will run on my computer? Test my computer for multiple game requirements at one time. 
+ 
