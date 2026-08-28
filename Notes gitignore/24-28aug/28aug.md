@@ -1,1 +1,0 @@
-daily meeting, discussing about plans for today
