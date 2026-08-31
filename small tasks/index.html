@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<!--
+  ПОРТФОЛИО — один файл, без фреймворков и сборки.
+  Открывается двойным кликом.
+
+  Что нужно заменить (ищи слово ЗАМЕНИ, их три):
+   1. Фамилия в <h1>
+   2. Три ссылки в контактах
+   3. Путь к видео — атрибут src в теге <source>
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anton, développeur d’applications</title>
+<meta name="description" content="Trois outils : un bot de trading Solana dans Telegram, un scanner d’arbitrage pour les marchés de prédiction, et un script qui transforme des données cartographiques en liste de prospects.">
+
+<!-- Шрифты. Одна семья в двух начертаниях: обычное и моноширинное. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ── Цвета и размеры в одном месте. Меняешь тут — меняется везде. ── */
+:root {
+  --bg:     #EEF0EE;  /* фон страницы */
+  --ink:    #16211C;  /* основной текст */
+  --muted:  #5C6660;  /* второстепенный текст */
+  --line:   #C9D0CB;  /* разделительные линии */
+  --green:  #1F6F4A;  /* прибыль, ссылки */
+  --width:  44rem;    /* ширина всей колонки */
+  --text:   34rem;    /* ширина абзацев */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 4.5rem 1.5rem 6rem;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+header, main, footer { max-width: var(--width); margin: 0 auto; }
+
+p { max-width: var(--text); }
+
+a {
+  color: var(--green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* ── Шапка ── */
+h1 { margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; }
+
+.role { margin: 0.4rem 0 1.6rem; color: var(--muted); }
+
+.contacts {
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.85rem;
+}
+.contacts li { margin-bottom: 0.35rem; }
+
+/* ── Проект ── */
+.project {
+  margin-top: 4.5rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--line);
+}
+
+h2 { margin: 0 0 0.4rem; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+
+.summary { margin: 0 0 2rem; color: var(--muted); }
+
+/* Рамка вокруг видео и картинки */
+.media {
+  margin: 0 0 2rem;
+  border: 1px solid var(--line);
+  line-height: 0;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.media video, .media svg { display: block; width: 100%; height: auto; }
+
+/* Подпись под картинкой */
+.caption {
+  margin: -1.25rem 0 2rem;
+  max-width: var(--text);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Строка со стеком */
+.stack {
+  margin: 2rem 0 0;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Список «что было сложного» */
+.notes { margin: 1.75rem 0 0; padding: 0; list-style: none; max-width: var(--text); }
+.notes li {
+  margin-bottom: 1.1rem;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--line);
+}
+.notes li:last-child { margin-bottom: 0; }
+
+/* Врезка с реальным результатом */
+.result {
+  margin-top: 2rem;
+  padding: 0.9rem 1.1rem;
+  max-width: var(--text);
+  background: #fff;
+  border-left: 3px solid var(--green);
+  font-size: 0.95rem;
+}
+
+code {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.88em;
+  background: #fff;
+  padding: 0.1em 0.35em;
+}
+
+footer {
+  margin-top: 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ── Телефоны ── */
+@media (max-width: 640px) {
+  body { padding: 3rem 1.15rem 4rem; font-size: 16px; }
+  h1 { font-size: 1.6rem; }
+  .project { margin-top: 3.5rem; padding-top: 2.25rem; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Anton Tkachuk</h1>
+  <p class="role">Apprenti développeur d’applications à l’EPFL, Lausanne</p>
+
+  <p>Je construis de petits outils qui vont chercher des données quelque part et en font
+     quelque chose. Un terminal de trading qui vit dans une messagerie, un scanner qui
+     surveille les marchés de prédiction à la recherche de prix qui ne s’additionnent plus,
+     un script qui transforme des données cartographiques en liste de boutiques à contacter.</p>
+
+  <p>En voici trois, chacun avec la partie qui a vraiment posé problème.</p>
+
+  <ul class="contacts">
+    <li><a href="mailto:anton.tkachuk@epfl.ch">anton.tkachuk@epfl.ch</a></li>
+    <li><a href="https://github.com/fre7co">github.com/fre7co</a></li>
+    <li><a href="https://t.me/fre7co">t.me/fre7co</a></li>
+  </ul>
+</header>
+
+<main>
+
+  <!-- ══════════ 1. Bot Solana ══════════ -->
+  <article class="project">
+    <h2>Un terminal de trading Solana dans Telegram</h2>
+    <p class="summary">Connecter un portefeuille, puis acheter ou vendre n’importe quel token
+       en collant son adresse de contrat. Sans navigateur, sans extension, sans quitter la
+       conversation.</p>
+
+    <div class="media">
+      <video controls preload="metadata" playsinline poster="bot-demo-poster.jpg">
+        <source src="IMG_8433.MP4" type="video/mp4">
+        Votre navigateur ne peut pas lire cette vidéo.
+      </video>
+    </div>
+
+    <p>Une transaction complète tient en cinq touches. On colle une adresse, on saisit un
+       montant, on lit ce qu’on va recevoir et ce qu’on recevra dans le pire des cas, on
+       confirme. Le bot signe la transaction et renvoie un lien Solscan. La vente suit le même
+       chemin, mais en pourcentage de ce qu’on détient.</p>
+
+    <p>L’essentiel du travail est parti dans les cas d’échec plutôt que dans le chemin
+       nominal. Un bot de trading qui affiche un compteur puis meurt est pire qu’un bot qui
+       refuse la transaction en disant pourquoi.</p>
+
+    <ul class="notes">
+      <li>Les tokens récents n’apparaissent dans la liste de Jupiter qu’au bout de quelques
+          heures, et sans le nombre de décimales on ne peut pas calculer un montant juste. Le
+          bot lit alors le compte mint directement en RPC, puis retombe sur une valeur par
+          défaut sûre. Un token sans nom se négocie quand même, on voit simplement une adresse
+          tronquée à la place du ticker.</li>
+      <li>La vue portefeuille tient en un seul appel réseau, pas trente et un. Helius renvoie
+          ensemble les soldes, les décimales et les prix en dollars, donc aucune requête de
+          prix token par token.</li>
+      <li>La vente se fait en pourcentage, calculé sur le solde entier brut et non sur la
+          valeur arrondie affichée. Les soldes de memecoins comptent douze chiffres. Les
+          saisir à la main, c’est perdre de l’argent sur une faute de frappe, et arrondir
+          avant le calcul laisse de la poussière sur une vente à 100&#160;%.</li>
+      <li>Trois options de la requête de swap font le vrai travail. <code>wrapAndUnwrapSol</code>
+          évite à l’utilisateur d’avoir à savoir ce qu’est du SOL enveloppé. Des frais de
+          priorité automatiques empêchent les transactions d’échouer en silence quand le
+          réseau est chargé. Une limite de calcul dynamique laisse passer les routes à
+          plusieurs sauts.</li>
+    </ul>
+
+    <p class="stack">Python, aiogram 3, Jupiter Aggregator v6, Helius RPC et DAS, solders</p>
+  </article>
+
+  <!-- ══════════ 2. Polymarket ══════════ -->
+  <article class="project">
+    <h2>Un scanner d’arbitrage pour les marchés de prédiction</h2>
+    <p class="summary">Passe en revue chaque marché à issues multiples de Polymarket une fois
+       par minute et envoie une alerte Telegram quand les prix cessent de s’additionner.</p>
+
+    <div class="media">
+        <svg viewBox="0 0 760 548" role="img" aria-labelledby="pmTitre pmDesc">
+          <title id="pmTitre">Un marché mal coté</title>
+          <desc id="pmDesc">Un marché de prédiction affichant quatre issues cotées à 40, 31, 15 et 8 centimes. Ensemble, les quatre parts Oui coûtent 94 centimes, mais une seule d’entre elles gagnera et rapportera 100 centimes, ce qui laisse 6 centimes de bénéfice garanti.</desc>
+
+          <rect width="760" height="548" fill="#131B24"/>
+
+          <rect x="40" y="36" width="680" height="316" rx="12" fill="#1B2733" stroke="#2A3846"/>
+
+          <text x="64" y="74" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="17" font-weight="600" fill="#EDEFF2">Quelle équipe remporte le tournoi&#8239;?</text>
+          <text x="64"  y="99" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" fill="#8A96A3">Volume 22&#160;481&#160;$</text>
+          <text x="186" y="99" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" fill="#8A96A3">Clôture le 3 nov. 2026</text>
+          <line x1="64" y1="118" x2="696" y2="118" stroke="#2A3846"/>
+
+          <circle cx="77" cy="159" r="13" fill="#2E3D4C"/>
+          <text x="77" y="164" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" fill="#8A96A3" text-anchor="middle">A</text>
+          <text x="104" y="164" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="14" fill="#EDEFF2">Équipe A</text>
+          <text x="372" y="164" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="15" font-weight="600" fill="#EDEFF2" text-anchor="end">40&#160;%</text>
+          <rect x="420" y="144" width="118" height="30" rx="6" fill="#27AE60" fill-opacity="0.16" stroke="#27AE60" stroke-opacity="0.45"/>
+          <text x="479" y="164" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#3ECF87" text-anchor="middle">Oui 40&#160;&#162;</text>
+          <rect x="550" y="144" width="118" height="30" rx="6" fill="#E64800" fill-opacity="0.13" stroke="#E64800" stroke-opacity="0.35"/>
+          <text x="609" y="164" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#F5794A" text-anchor="middle">Non 61&#160;&#162;</text>
+
+          <circle cx="77" cy="209" r="13" fill="#2E3D4C"/>
+          <text x="77" y="214" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" fill="#8A96A3" text-anchor="middle">B</text>
+          <text x="104" y="214" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="14" fill="#EDEFF2">Équipe B</text>
+          <text x="372" y="214" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="15" font-weight="600" fill="#EDEFF2" text-anchor="end">31&#160;%</text>
+          <rect x="420" y="194" width="118" height="30" rx="6" fill="#27AE60" fill-opacity="0.16" stroke="#27AE60" stroke-opacity="0.45"/>
+          <text x="479" y="214" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#3ECF87" text-anchor="middle">Oui 31&#160;&#162;</text>
+          <rect x="550" y="194" width="118" height="30" rx="6" fill="#E64800" fill-opacity="0.13" stroke="#E64800" stroke-opacity="0.35"/>
+          <text x="609" y="214" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#F5794A" text-anchor="middle">Non 70&#160;&#162;</text>
+
+          <circle cx="77" cy="259" r="13" fill="#2E3D4C"/>
+          <text x="77" y="264" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" fill="#8A96A3" text-anchor="middle">C</text>
+          <text x="104" y="264" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="14" fill="#EDEFF2">Équipe C</text>
+          <text x="372" y="264" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="15" font-weight="600" fill="#EDEFF2" text-anchor="end">15&#160;%</text>
+          <rect x="420" y="244" width="118" height="30" rx="6" fill="#27AE60" fill-opacity="0.16" stroke="#27AE60" stroke-opacity="0.45"/>
+          <text x="479" y="264" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#3ECF87" text-anchor="middle">Oui 15&#160;&#162;</text>
+          <rect x="550" y="244" width="118" height="30" rx="6" fill="#E64800" fill-opacity="0.13" stroke="#E64800" stroke-opacity="0.35"/>
+          <text x="609" y="264" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#F5794A" text-anchor="middle">Non 86&#160;&#162;</text>
+
+          <circle cx="77" cy="309" r="13" fill="#2E3D4C"/>
+          <text x="77" y="314" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" fill="#8A96A3" text-anchor="middle">D</text>
+          <text x="104" y="314" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="14" fill="#EDEFF2">Équipe D</text>
+          <text x="372" y="314" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="15" font-weight="600" fill="#EDEFF2" text-anchor="end">8&#160;%</text>
+          <rect x="420" y="294" width="118" height="30" rx="6" fill="#27AE60" fill-opacity="0.16" stroke="#27AE60" stroke-opacity="0.45"/>
+          <text x="479" y="314" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#3ECF87" text-anchor="middle">Oui 8&#160;&#162;</text>
+          <rect x="550" y="294" width="118" height="30" rx="6" fill="#E64800" fill-opacity="0.13" stroke="#E64800" stroke-opacity="0.35"/>
+          <text x="609" y="314" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#F5794A" text-anchor="middle">Non 93&#160;&#162;</text>
+
+          <rect x="412" y="138" width="134" height="202" rx="10" fill="none" stroke="#3ECF87" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+          <line x1="479" y1="352" x2="479" y2="377" stroke="#3ECF87" stroke-opacity="0.55"/>
+          <polygon points="473,377 485,377 479,386" fill="#3ECF87" fill-opacity="0.55"/>
+
+          <rect x="40" y="390" width="680" height="134" rx="12" fill="#1B2733" stroke="#2A3846"/>
+
+          <text x="72"  y="428" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="14" fill="#A8B3BF">Une part Oui sur chacune des quatre issues</text>
+          <text x="688" y="428" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="15" fill="#EDEFF2" text-anchor="end">94&#160;&#162;</text>
+
+          <text x="72"  y="460" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="14" fill="#A8B3BF">Ce que rapporte l’issue gagnante</text>
+          <text x="688" y="460" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="15" fill="#EDEFF2" text-anchor="end">100&#160;&#162;</text>
+
+          <line x1="72" y1="478" x2="688" y2="478" stroke="#2A3846"/>
+
+          <text x="72"  y="506" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="14" font-weight="600" fill="#3ECF87">Acquis avant même le coup d’envoi</text>
+          <text x="688" y="506" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="16" font-weight="500" fill="#3ECF87" text-anchor="end">+6&#160;&#162;</text>
+        </svg>
+    </div>
+    <p class="caption">Illustration. L’écart est dessiné à 6&#160;% pour rester visible. Dans la
+       réalité il tourne entre un et trois pour cent et se referme en quelques minutes.</p>
+
+    <p>Sur un marché à plusieurs issues, une seule se réalisera. La part gagnante rapporte un
+       dollar, donc les prix Oui de toutes les issues devraient s’additionner à un dollar.
+       Quand leur somme tombe en dessous, on peut acheter le lot complet et détenir un dollar
+       garanti pour moins d’un dollar. L’écart est le bénéfice, et il ne dépend pas de qui
+       gagne.</p>
+
+    <p>Le scanner récupère tous les marchés à issues multiples actifs, demande le prix médian
+       de chaque issue en une seule requête groupée, en fait la somme, et alerte quand le total
+       s’écarte suffisamment de un.</p>
+
+    <div class="result">
+      Un passage en conditions réelles a trouvé <em>Balance of Power: 2026 Midterms</em> coté
+      1,85&#160;% sous la parité, sur 22&#160;000&#160;$ de volume.
+    </div>
+
+    <ul class="notes">
+      <li>Le point d’accès aux prix groupés attend un tableau nu comme corps de requête, pas
+          un objet qui l’enveloppe. Toutes les requêtes échouaient tant que je faisais
+          confiance à la forme que j’avais supposée au lieu de lire ce que le serveur rejetait
+          vraiment.</li>
+      <li>Les marchés sans carnet d’ordres bilatéral n’ont pas de prix médian du tout.
+          Ceux-là passent par une seconde source. Sans ce repli, le scanner sautait en silence
+          un tiers du tableau.</li>
+      <li>L’essentiel du débogage n’a pas porté sur la logique de détection mais sur la
+          question : pourquoi n’a-t-il rien trouvé. D’où un script de diagnostic séparé qui
+          affiche, marché par marché, quel filtre l’a écarté et pour quelle raison. Les
+          devinettes sont devenues une liste.</li>
+    </ul>
+
+    <p class="stack">Python, asyncio, httpx, API Gamma et CLOB de Polymarket, aiogram, loguru</p>
+  </article>
+
+  <!-- ══════════ 3. Scraper OSM ══════════ -->
+  <article class="project">
+    <h2>Trouver des boutiques par leurs tags cartographiques</h2>
+    <p class="summary">Récupère tous les commerces correspondant à un jeu de tags
+       OpenStreetMap sur toute une région et en fait une liste de contacts.</p>
+
+    <p>OpenStreetMap n’est pas seulement une image de carte. Chaque commerce y porte des tags
+       structurés qui disent de quel type d’activité il s’agit, avec les coordonnées que
+       quelqu’un a bien voulu renseigner. Une bijouterie est taguée <code>shop=jewelry</code>,
+       et on peut demander toutes celles d’une zone en une seule requête.</p>
+
+    <p>Le script envoie cette requête, puis nettoie ce qui revient. Nom, adresse, site web,
+       téléphone et coordonnées dans un seul tableur, doublons fusionnés, entrées sans aucun
+       moyen de contact écartées.</p>
+
+    <p><strong>Le cas d’usage.</strong> J’écrivais de la prospection B2B à froid pour NATKINA,
+       une marque de bijoux suisse, et il me fallait une liste de boutiques à approcher. Google
+       Maps donne un écran à la fois et aucun export. Là, toute la région arrive dans un fichier
+       en un seul passage, ce qui transforme une semaine de copier-coller en une après-midi.</p>
+
+    <p class="stack">Python, API Overpass d’OpenStreetMap, requests, CSV</p>
+  </article>
+
+</main>
+
+<footer>
+  <p>Une seule page HTML. Pas de framework, pas d’étape de build, aucun traceur.</p>
+</footer>
+
+</body>
+</html>
