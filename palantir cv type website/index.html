@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<!--
+  ANTON TKACHUK — DOSSIER / PORTFOLIO
+  Un seul fichier. Aucun framework, aucune étape de build, aucun traceur.
+
+  Quatre habillages complets, commutables à chaud :
+    PALANTIR  — console d'exploitation, monochrome, angles vifs
+    UNITED24  — éditorial, capitales massives, jaune et bleu
+    DIIA      — service public, blanc, cartes arrondies, calme
+    BRAVE     — dégradé orange-magenta, rondeurs, contraste
+
+  Tout passe par des variables CSS : chaque habillage redéfinit
+  la typographie, les rayons, la densité, les bordures et le mouvement.
+
+  À personnaliser :
+    1. Les trois liens de contact (chercher "CONTACT-LINKS")
+    2. Le chemin de la vidéo (chercher "VIDEO-SRC")
+    3. Les textes : tout est dans l'objet I18N en bas du fichier.
+-->
+<html lang="fr" data-theme="dark" data-skin="palantir">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anton Tkachuk — Dossier</title>
+<meta name="description" content="Trois outils : un bot de trading Solana dans Telegram, un scanner d'arbitrage pour les marchés de prédiction, et un script qui transforme des données cartographiques en liste de prospects.">
+<meta name="color-scheme" content="dark light">
+
+<!-- Applique l'habillage avant le premier rendu : pas de clignotement. -->
+<script>
+(function(){try{
+  var NAT = {palantir:"dark", u24:"light", diia:"light", brave:"dark"};
+  var q = new URLSearchParams(location.search).get("skin");
+  var s = q || localStorage.getItem("tk.skin") || "palantir";
+  if(!NAT[s]) s = "palantir";
+  var t = localStorage.getItem("tk.theme." + s) || NAT[s];
+  var d = document.documentElement;
+  d.setAttribute("data-skin", s);
+  d.setAttribute("data-theme", t === "light" ? "light" : "dark");
+  d.setAttribute("lang", localStorage.getItem("tk.lang") === "en" ? "en" : "fr");
+}catch(e){}})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Onest:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   01 · JETONS — quatre habillages × deux thèmes
+   Chaque bloc redéfinit le même jeu de variables. Rien d'autre ne change.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root{
+  /* invariants de mise en page */
+  --max:78rem;
+  --text:38rem;
+  --rail:3.25rem;
+  --bar:3.25rem;
+}
+
+/* ─────────── PALANTIR · sombre (défaut) ─────────── */
+:root,
+:root[data-skin="palantir"][data-theme="dark"]{
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --display:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --bg:#08090A; --bg-2:#0C0E10; --panel:#0F1214; --panel-2:#131719; --raise:#171C1F;
+  --ink:#E6E9EA; --ink-2:#AAB3B6; --muted:#6C7679; --faint:#454D50;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.055); --line-strong:rgba(255,255,255,.18);
+
+  --accent:#4C90F0; --accent-ink:#FFFFFF; --grad:linear-gradient(90deg,#4C90F0,#4C90F0);
+  --hot:#4C90F0; --hot-dim:rgba(76,144,240,.14); --hot-line:rgba(76,144,240,.36);
+  --signal:#3ECF87; --signal-dim:rgba(62,207,135,.12);
+  --warn:#F5794A; --warn-dim:rgba(245,121,74,.12);
+
+  --r:0px; --r-sm:0px; --r-pill:0px; --bw:1px;
+  --shadow:0 24px 60px -24px rgba(0,0,0,.9);
+  --shadow-soft:none;
+
+  --h1-weight:600; --h1-track:-.035em; --h1-case:none; --h1-l2-weight:300;
+  --h2-case:none; --h2-weight:500; --h2-track:-.01em;
+  --micro-font:var(--mono); --micro-case:uppercase; --micro-track:.16em; --micro-weight:500; --micro-size:10px;
+  --btn-radius:0px; --btn-case:uppercase; --btn-track:.15em; --btn-weight:500; --btn-font:var(--mono); --btn-size:10.5px;
+  --tag-font:var(--mono);
+
+  --ease:cubic-bezier(.22,1,.36,1); --rev-y:18px; --rev-t:.7s;
+  --net-alpha:.55; --net-link:.22; --net-node:.42;
+}
+
+/* ─────────── PALANTIR · clair ─────────── */
+:root[data-skin="palantir"][data-theme="light"]{
+  --bg:#EFF1F0; --bg-2:#E7EAE9; --panel:#FFFFFF; --panel-2:#F7F8F8; --raise:#FFFFFF;
+  --ink:#111819; --ink-2:#3D4749; --muted:#6A7476; --faint:#A6AEB0;
+  --line:rgba(16,24,25,.13); --line-2:rgba(16,24,25,.075); --line-strong:rgba(16,24,25,.26);
+  --accent:#1863C4; --accent-ink:#FFFFFF; --grad:linear-gradient(90deg,#1863C4,#1863C4);
+  --hot:#1863C4; --hot-dim:rgba(24,99,196,.09); --hot-line:rgba(24,99,196,.32);
+  --signal:#127A4C; --signal-dim:rgba(18,122,76,.09);
+  --warn:#C4501F; --warn-dim:rgba(196,80,31,.09);
+  --shadow:0 20px 44px -26px rgba(16,24,25,.4);
+  --net-alpha:.4;
+}
+
+/* ─────────── UNITED24 · clair (natif) ─────────── */
+:root[data-skin="u24"][data-theme="light"]{
+  --sans:"Archivo",system-ui,-apple-system,sans-serif;
+  --display:"Archivo",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --bg:#FFFFFF; --bg-2:#F2F2F2; --panel:#FFFFFF; --panel-2:#F6F6F6; --raise:#FFFFFF;
+  --ink:#000000; --ink-2:#2B2B2B; --muted:#6A6A6A; --faint:#A5A5A5;
+  --line:rgba(0,0,0,.18); --line-2:rgba(0,0,0,.09); --line-strong:#000000;
+
+  --accent:#FFD500; --accent-ink:#000000; --grad:linear-gradient(90deg,#FFD500,#FFD500);
+  --hot:#0057B7; --hot-dim:rgba(0,87,183,.10); --hot-line:rgba(0,87,183,.35);
+  --signal:#0B7A3E; --signal-dim:rgba(11,122,62,.10);
+  --warn:#C43B12; --warn-dim:rgba(196,59,18,.10);
+
+  --r:0px; --r-sm:0px; --r-pill:0px; --bw:2px;
+  --shadow:0 18px 40px -26px rgba(0,0,0,.45);
+  --shadow-soft:none;
+
+  --h1-weight:900; --h1-track:-.045em; --h1-case:uppercase; --h1-l2-weight:900;
+  --h2-case:uppercase; --h2-weight:800; --h2-track:-.025em;
+  --micro-font:var(--sans); --micro-case:uppercase; --micro-track:.2em; --micro-weight:700; --micro-size:10px;
+  --btn-radius:0px; --btn-case:uppercase; --btn-track:.1em; --btn-weight:800; --btn-font:var(--sans); --btn-size:11px;
+  --tag-font:var(--sans);
+
+  --ease:cubic-bezier(.16,1,.3,1); --rev-y:26px; --rev-t:.62s;
+  --net-alpha:.5; --net-link:.16; --net-node:.5;
+}
+
+/* ─────────── UNITED24 · sombre ─────────── */
+:root[data-skin="u24"][data-theme="dark"]{
+  --sans:"Archivo",system-ui,-apple-system,sans-serif;
+  --display:"Archivo",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --bg:#000000; --bg-2:#0A0A0A; --panel:#0D0D0D; --panel-2:#141414; --raise:#1B1B1B;
+  --ink:#FFFFFF; --ink-2:#CACACA; --muted:#8A8A8A; --faint:#575757;
+  --line:rgba(255,255,255,.2); --line-2:rgba(255,255,255,.1); --line-strong:#FFD500;
+
+  --accent:#FFD500; --accent-ink:#000000; --grad:linear-gradient(90deg,#FFD500,#FFD500);
+  --hot:#FFD500; --hot-dim:rgba(255,213,0,.13); --hot-line:rgba(255,213,0,.45);
+  --signal:#5BE49B; --signal-dim:rgba(91,228,155,.12);
+  --warn:#FF6B3D; --warn-dim:rgba(255,107,61,.12);
+
+  --r:0px; --r-sm:0px; --r-pill:0px; --bw:2px;
+  --shadow:0 24px 60px -24px rgba(0,0,0,.95);
+  --shadow-soft:none;
+
+  --h1-weight:900; --h1-track:-.045em; --h1-case:uppercase; --h1-l2-weight:900;
+  --h2-case:uppercase; --h2-weight:800; --h2-track:-.025em;
+  --micro-font:var(--sans); --micro-case:uppercase; --micro-track:.2em; --micro-weight:700; --micro-size:10px;
+  --btn-radius:0px; --btn-case:uppercase; --btn-track:.1em; --btn-weight:800; --btn-font:var(--sans); --btn-size:11px;
+  --tag-font:var(--sans);
+
+  --ease:cubic-bezier(.16,1,.3,1); --rev-y:26px; --rev-t:.62s;
+  --net-alpha:.5; --net-link:.18; --net-node:.55;
+}
+
+/* ─────────── DIIA · clair (natif) ─────────── */
+:root[data-skin="diia"][data-theme="light"]{
+  --sans:"Onest","Manrope",system-ui,-apple-system,sans-serif;
+  --display:"Onest","Manrope",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --bg:#FFFFFF; --bg-2:#F4F6F8; --panel:#FFFFFF; --panel-2:#F4F6F8; --raise:#FFFFFF;
+  --ink:#0D0F12; --ink-2:#4A5259; --muted:#767F87; --faint:#AEB6BD;
+  --line:rgba(13,15,18,.08); --line-2:rgba(13,15,18,.05); --line-strong:rgba(13,15,18,.14);
+
+  --accent:#0D0F12; --accent-ink:#FFFFFF; --grad:linear-gradient(90deg,#0D0F12,#0D0F12);
+  --hot:#2F6FED; --hot-dim:rgba(47,111,237,.09); --hot-line:rgba(47,111,237,.26);
+  --signal:#0E9F62; --signal-dim:rgba(14,159,98,.10);
+  --warn:#E2621B; --warn-dim:rgba(226,98,27,.10);
+
+  --r:20px; --r-sm:14px; --r-pill:999px; --bw:1px;
+  --shadow:0 22px 48px -28px rgba(13,15,18,.3);
+  --shadow-soft:0 6px 26px rgba(13,15,18,.06);
+
+  --h1-weight:600; --h1-track:-.032em; --h1-case:none; --h1-l2-weight:300;
+  --h2-case:none; --h2-weight:600; --h2-track:-.02em;
+  --micro-font:var(--sans); --micro-case:none; --micro-track:.01em; --micro-weight:500; --micro-size:12px;
+  --btn-radius:999px; --btn-case:none; --btn-track:0; --btn-weight:600; --btn-font:var(--sans); --btn-size:13px;
+  --tag-font:var(--sans);
+
+  --ease:cubic-bezier(.33,1,.44,1); --rev-y:12px; --rev-t:.85s;
+  --net-alpha:.3; --net-link:.14; --net-node:.34;
+}
+
+/* ─────────── DIIA · sombre ─────────── */
+:root[data-skin="diia"][data-theme="dark"]{
+  --sans:"Onest","Manrope",system-ui,-apple-system,sans-serif;
+  --display:"Onest","Manrope",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --bg:#0E1013; --bg-2:#14171B; --panel:#171B1F; --panel-2:#1D2228; --raise:#232931;
+  --ink:#F2F5F7; --ink-2:#B4BDC4; --muted:#8B959D; --faint:#5A646C;
+  --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.045); --line-strong:rgba(255,255,255,.14);
+
+  --accent:#FFFFFF; --accent-ink:#0E1013; --grad:linear-gradient(90deg,#FFFFFF,#FFFFFF);
+  --hot:#6FA0FF; --hot-dim:rgba(111,160,255,.12); --hot-line:rgba(111,160,255,.3);
+  --signal:#3FD69A; --signal-dim:rgba(63,214,154,.12);
+  --warn:#FF8A4C; --warn-dim:rgba(255,138,76,.12);
+
+  --r:20px; --r-sm:14px; --r-pill:999px; --bw:1px;
+  --shadow:0 26px 60px -30px rgba(0,0,0,.85);
+  --shadow-soft:0 6px 26px rgba(0,0,0,.35);
+
+  --h1-weight:600; --h1-track:-.032em; --h1-case:none; --h1-l2-weight:300;
+  --h2-case:none; --h2-weight:600; --h2-track:-.02em;
+  --micro-font:var(--sans); --micro-case:none; --micro-track:.01em; --micro-weight:500; --micro-size:12px;
+  --btn-radius:999px; --btn-case:none; --btn-track:0; --btn-weight:600; --btn-font:var(--sans); --btn-size:13px;
+  --tag-font:var(--sans);
+
+  --ease:cubic-bezier(.33,1,.44,1); --rev-y:12px; --rev-t:.85s;
+  --net-alpha:.34; --net-link:.16; --net-node:.36;
+}
+
+/* ─────────── BRAVE · sombre (natif) ─────────── */
+:root[data-skin="brave"][data-theme="dark"]{
+  --sans:"Space Grotesk",system-ui,-apple-system,sans-serif;
+  --display:"Space Grotesk",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --bg:#16141F; --bg-2:#1B1826; --panel:#211E2E; --panel-2:#272338; --raise:#2E2941;
+  --ink:#F5F2FF; --ink-2:#C3BCD9; --muted:#8F86AB; --faint:#5F5878;
+  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.06); --line-strong:rgba(255,255,255,.2);
+
+  --accent:#FB542B; --accent-ink:#FFFFFF; --grad:linear-gradient(100deg,#FB542B 0%,#F5501F 35%,#A1278E 100%);
+  --hot:#FF7A4D; --hot-dim:rgba(251,84,43,.15); --hot-line:rgba(251,84,43,.42);
+  --signal:#3CD9A0; --signal-dim:rgba(60,217,160,.13);
+  --warn:#FFB020; --warn-dim:rgba(255,176,32,.13);
+
+  --r:14px; --r-sm:10px; --r-pill:999px; --bw:1px;
+  --shadow:0 26px 60px -28px rgba(0,0,0,.8);
+  --shadow-soft:0 10px 34px -18px rgba(251,84,43,.4);
+
+  --h1-weight:700; --h1-track:-.03em; --h1-case:none; --h1-l2-weight:400;
+  --h2-case:none; --h2-weight:600; --h2-track:-.02em;
+  --micro-font:var(--sans); --micro-case:uppercase; --micro-track:.13em; --micro-weight:600; --micro-size:11px;
+  --btn-radius:999px; --btn-case:none; --btn-track:.01em; --btn-weight:600; --btn-font:var(--sans); --btn-size:13px;
+  --tag-font:var(--sans);
+
+  --ease:cubic-bezier(.2,.9,.25,1); --rev-y:20px; --rev-t:.7s;
+  --net-alpha:.6; --net-link:.2; --net-node:.5;
+}
+
+/* ─────────── BRAVE · clair ─────────── */
+:root[data-skin="brave"][data-theme="light"]{
+  --sans:"Space Grotesk",system-ui,-apple-system,sans-serif;
+  --display:"Space Grotesk",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --bg:#FFFFFF; --bg-2:#F7F5FB; --panel:#FFFFFF; --panel-2:#F7F5FB; --raise:#FFFFFF;
+  --ink:#1A1626; --ink-2:#4A4360; --muted:#726A88; --faint:#A79FBC;
+  --line:rgba(26,22,38,.11); --line-2:rgba(26,22,38,.06); --line-strong:rgba(26,22,38,.22);
+
+  --accent:#FB542B; --accent-ink:#FFFFFF; --grad:linear-gradient(100deg,#FB542B 0%,#F5501F 35%,#A1278E 100%);
+  --hot:#DE3A0F; --hot-dim:rgba(222,58,15,.09); --hot-line:rgba(222,58,15,.3);
+  --signal:#0E9A6C; --signal-dim:rgba(14,154,108,.1);
+  --warn:#C97A00; --warn-dim:rgba(201,122,0,.1);
+
+  --r:14px; --r-sm:10px; --r-pill:999px; --bw:1px;
+  --shadow:0 22px 50px -30px rgba(26,22,38,.4);
+  --shadow-soft:0 10px 34px -20px rgba(251,84,43,.35);
+
+  --h1-weight:700; --h1-track:-.03em; --h1-case:none; --h1-l2-weight:400;
+  --h2-case:none; --h2-weight:600; --h2-track:-.02em;
+  --micro-font:var(--sans); --micro-case:uppercase; --micro-track:.13em; --micro-weight:600; --micro-size:11px;
+  --btn-radius:999px; --btn-case:none; --btn-track:.01em; --btn-weight:600; --btn-font:var(--sans); --btn-size:13px;
+  --tag-font:var(--sans);
+
+  --ease:cubic-bezier(.2,.9,.25,1); --rev-y:20px; --rev-t:.7s;
+  --net-alpha:.45; --net-link:.16; --net-node:.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   02 · BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box}
+
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + 2rem)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  transition:background .45s var(--ease),color .45s var(--ease);
+}
+
+/* Fond : propre à chaque habillage. */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;transition:opacity .5s}
+[data-skin="palantir"] body::before{
+  background-image:
+    linear-gradient(to right,var(--line-2) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--line-2) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 10%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 10%,transparent 78%);
+}
+[data-skin="u24"] body::before{
+  background-image:repeating-linear-gradient(135deg,var(--line-2) 0 1px,transparent 1px 16px);
+  mask-image:radial-gradient(ellipse 90% 60% at 92% 0%,#000 0%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 92% 0%,#000 0%,transparent 70%);
+  opacity:.9;
+}
+[data-skin="diia"] body::before{
+  background:
+    radial-gradient(38rem 26rem at 82% -6%, var(--hot-dim), transparent 70%),
+    radial-gradient(30rem 22rem at 4% 12%, var(--panel-2), transparent 72%);
+}
+[data-skin="brave"] body::before{
+  background:
+    radial-gradient(40rem 28rem at 88% -8%, rgba(251,84,43,.18), transparent 70%),
+    radial-gradient(34rem 26rem at 6% 6%, rgba(161,39,142,.16), transparent 72%);
+}
+
+.micro{
+  font-family:var(--micro-font);
+  font-size:var(--micro-size);
+  font-weight:var(--micro-weight);
+  letter-spacing:var(--micro-track);
+  text-transform:var(--micro-case);
+  color:var(--muted);
+}
+.mono{font-family:var(--mono)}
+
+a{color:inherit;text-decoration:none}
+p{margin:0 0 1.1rem;max-width:var(--text);color:var(--ink-2)}
+p:last-child{margin-bottom:0}
+strong{color:var(--ink);font-weight:600}
+em{font-style:normal;color:var(--ink);border-bottom:1px solid var(--hot-line)}
+
+code{
+  font-family:var(--mono);font-size:.86em;
+  background:var(--hot-dim);color:var(--ink);
+  padding:.1em .38em;border-radius:var(--r-sm);
+}
+
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--hot);outline-offset:2px}
+
+.link{color:var(--ink);border-bottom:1px solid var(--hot-line);transition:border-color .2s,color .2s}
+.link:hover{color:var(--hot);border-color:var(--hot)}
+
+.panel{
+  position:relative;
+  background:var(--panel);
+  border:var(--bw) solid var(--line);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-soft);
+  transition:background .45s var(--ease),border-color .45s var(--ease),border-radius .35s var(--ease);
+}
+/* Coins techniques : signature PALANTIR uniquement. */
+.panel::before,.panel::after{content:"";position:absolute;width:9px;height:9px;pointer-events:none;border-color:var(--line-strong);border-style:solid;opacity:0}
+.panel::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
+.panel::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+[data-skin="palantir"] .panel::before,[data-skin="palantir"] .panel::after{opacity:1}
+
+.shell{width:100%;max-width:var(--max);margin:0 auto;padding:0 clamp(1.1rem,4vw,2.5rem);position:relative;z-index:1}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   03 · ÉCRAN DE DÉMARRAGE
+   ═══════════════════════════════════════════════════════════════════════════ */
+#boot{
+  position:fixed;inset:0;z-index:999;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .55s var(--ease),visibility .55s;
+}
+#boot.done{opacity:0;visibility:hidden}
+.boot-inner{width:min(30rem,86vw);font-family:var(--mono);font-size:11.5px}
+.boot-mark{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem;letter-spacing:.2em;font-size:11px;color:var(--ink)}
+.boot-mark .sep{color:var(--faint)}
+#bootLog{min-height:8.4rem;color:var(--muted)}
+#bootLog div{display:flex;justify-content:space-between;gap:1rem;opacity:0;animation:bootIn .3s var(--ease) forwards}
+#bootLog div b{font-weight:500;color:var(--signal)}
+@keyframes bootIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.boot-bar{height:2px;background:var(--line);margin-top:1.2rem;overflow:hidden;border-radius:var(--r-pill)}
+.boot-bar i{display:block;height:100%;width:0;background:var(--grad);animation:bootBar 1.5s var(--ease) forwards}
+@keyframes bootBar{to{width:100%}}
+
+.diamond{width:12px;height:12px;border:1.5px solid var(--hot);transform:rotate(45deg);animation:pulse 2.4s ease-in-out infinite;flex-shrink:0}
+[data-skin="diia"] .diamond,[data-skin="brave"] .diamond{border-radius:3px}
+[data-skin="u24"] .diamond{background:var(--accent);border-color:var(--accent)}
+@keyframes pulse{0%,100%{opacity:1;transform:rotate(45deg) scale(1)}50%{opacity:.45;transform:rotate(45deg) scale(.82)}}
+
+/* Impulsion au changement d'habillage */
+#flash{position:fixed;inset:0;z-index:900;background:var(--grad);opacity:0;pointer-events:none}
+#flash.go{animation:flash .5s var(--ease)}
+@keyframes flash{0%{opacity:0}18%{opacity:.14}100%{opacity:0}}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   04 · BARRE SUPÉRIEURE
+   ═══════════════════════════════════════════════════════════════════════════ */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:var(--grad);transition:width .1s linear}
+[data-skin="palantir"] #progress{background:linear-gradient(90deg,var(--hot),var(--signal))}
+
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--bar);z-index:50;
+  display:flex;align-items:center;
+  background:color-mix(in srgb,var(--bg) 84%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:var(--bw) solid var(--line);
+}
+.bar-inner{width:100%;max-width:var(--max);margin:0 auto;padding:0 clamp(1.1rem,4vw,2.5rem);display:flex;align-items:center;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.brand-name{font-family:var(--micro-font);font-size:11.5px;letter-spacing:var(--micro-track);text-transform:uppercase;font-weight:600}
+[data-skin="diia"] .brand-name{letter-spacing:.02em;font-size:14px}
+.sep{color:var(--faint)}
+.brand-sub{font-family:var(--micro-font);font-size:10px;letter-spacing:var(--micro-track);color:var(--muted);text-transform:var(--micro-case)}
+
+#navlinks{display:flex;gap:.15rem}
+#navlinks a{
+  position:relative;padding:.45rem .7rem;
+  font-family:var(--micro-font);font-size:10.5px;letter-spacing:var(--micro-track);text-transform:uppercase;font-weight:var(--micro-weight);
+  color:var(--muted);transition:color .2s;
+}
+[data-skin="diia"] #navlinks a{font-size:13px;letter-spacing:.01em;text-transform:none;font-weight:500}
+#navlinks a::after{content:"";position:absolute;left:.7rem;right:.7rem;bottom:.15rem;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease);border-radius:var(--r-pill)}
+#navlinks a:hover,#navlinks a.on{color:var(--ink)}
+#navlinks a.on::after,#navlinks a:hover::after{transform:scaleX(1)}
+
+/* Sélecteur d'habillage */
+#skins{display:flex;align-items:center;margin-left:auto;border:var(--bw) solid var(--line);border-radius:var(--r-pill);overflow:hidden;flex-shrink:0}
+#skins button{
+  padding:.42rem .62rem;
+  font-family:var(--micro-font);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:var(--micro-weight);
+  color:var(--muted);transition:.2s;white-space:nowrap;border-right:1px solid var(--line-2);
+}
+#skins button:last-child{border-right:none}
+#skins button:hover{color:var(--ink);background:var(--panel-2)}
+#skins button.on{background:var(--accent);color:var(--accent-ink)}
+[data-skin="brave"] #skins button.on{background:var(--grad)}
+#skinCycle{display:none}
+
+.bar-tools{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.tool{
+  display:flex;align-items:center;gap:.4rem;height:1.9rem;padding:0 .6rem;
+  border:var(--bw) solid var(--line);border-radius:var(--r-pill);
+  font-family:var(--micro-font);font-size:10px;letter-spacing:var(--micro-track);text-transform:uppercase;font-weight:var(--micro-weight);
+  color:var(--muted);transition:.2s;
+}
+[data-skin="diia"] .tool{font-size:12px;letter-spacing:0;text-transform:none}
+.tool:hover{color:var(--ink);border-color:var(--line-strong);background:var(--panel-2)}
+.tool kbd{font-family:var(--mono);font-size:9.5px;color:var(--faint);border:none;background:none;padding:0}
+
+#clock{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.08em;padding-left:.8rem;border-left:1px solid var(--line);flex-shrink:0}
+.live-dot{width:5px;height:5px;background:var(--signal);border-radius:50%;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   05 · RAIL LATÉRAL
+   ═══════════════════════════════════════════════════════════════════════════ */
+#rail{
+  position:fixed;left:0;top:var(--bar);bottom:0;width:var(--rail);z-index:40;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.15rem;
+  border-right:var(--bw) solid var(--line);
+  background:color-mix(in srgb,var(--bg) 60%,transparent);
+}
+[data-skin="diia"] #rail,[data-skin="brave"] #rail{border-right-color:transparent}
+.rail-tick{position:relative;width:100%;display:flex;justify-content:center;padding:.15rem 0}
+.rail-tick i{display:block;width:14px;height:2px;background:var(--faint);transition:.3s var(--ease);border-radius:var(--r-pill)}
+.rail-tick.on i{width:24px;background:var(--hot)}
+.rail-tick span{
+  position:absolute;left:calc(100% + .6rem);top:50%;transform:translate(-6px,-50%);
+  white-space:nowrap;font-family:var(--micro-font);font-size:9.5px;letter-spacing:var(--micro-track);text-transform:uppercase;
+  color:var(--muted);opacity:0;pointer-events:none;transition:.25s var(--ease);
+}
+[data-skin="diia"] .rail-tick span{font-size:12px;letter-spacing:0;text-transform:none}
+.rail-tick:hover span,.rail-tick.on span{opacity:1;transform:translate(0,-50%)}
+.rail-tick:hover i{background:var(--ink)}
+
+#railTop{position:fixed;left:0;bottom:1.2rem;width:var(--rail);z-index:41;display:flex;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+#railTop.show{opacity:1;pointer-events:auto}
+#railTop button{width:2rem;height:2rem;border:var(--bw) solid var(--line);border-radius:var(--r-pill);display:grid;place-items:center;color:var(--muted);transition:.2s;background:var(--panel)}
+#railTop button:hover{color:var(--hot);border-color:var(--hot-line)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   06 · MISE EN PAGE
+   ═══════════════════════════════════════════════════════════════════════════ */
+#page{padding-left:var(--rail);padding-top:var(--bar);position:relative;z-index:1}
+
+.section{padding:clamp(4rem,9vw,7.5rem) 0}
+.section + .section{border-top:1px solid var(--line-2)}
+[data-skin="diia"] .section + .section,[data-skin="brave"] .section + .section{border-top-color:transparent}
+
+.sec-head{display:flex;align-items:baseline;gap:1.25rem;padding-bottom:1.1rem;margin-bottom:2.75rem;border-bottom:var(--bw) solid var(--line)}
+[data-skin="diia"] .sec-head{border-bottom-color:transparent;padding-bottom:0}
+.sec-head h2{margin:0;font-family:var(--display);font-size:clamp(1.15rem,2.4vw,1.65rem);font-weight:var(--h2-weight);letter-spacing:var(--h2-track);text-transform:var(--h2-case)}
+[data-skin="u24"] .sec-head h2{font-size:clamp(1.5rem,4vw,2.6rem)}
+[data-skin="diia"] .sec-head h2{font-size:clamp(1.4rem,3vw,2rem)}
+.sec-head .idx{font-family:var(--micro-font);font-size:10px;letter-spacing:.18em;color:var(--hot);font-weight:var(--micro-weight)}
+[data-skin="u24"] .sec-head .idx{font-size:13px}
+.sec-head .tail{margin-left:auto;font-family:var(--micro-font);font-size:10px;letter-spacing:var(--micro-track);color:var(--faint);text-transform:var(--micro-case)}
+[data-skin="diia"] .sec-head .tail{font-size:12px}
+
+.reveal{opacity:0;transform:translateY(var(--rev-y));transition:opacity var(--rev-t) var(--ease),transform var(--rev-t) var(--ease)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   07 · HÉROS
+   ═══════════════════════════════════════════════════════════════════════════ */
+#hero{position:relative;min-height:calc(100vh - var(--bar));display:flex;align-items:center;padding:5rem 0 4rem;overflow:hidden}
+#net{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(2rem,5vw,4.5rem);align-items:end}
+
+.hero-eyebrow{display:flex;align-items:center;gap:.7rem;margin-bottom:1.6rem;flex-wrap:wrap}
+.hero-eyebrow .bar{width:2rem;height:2px;background:var(--grad);border-radius:var(--r-pill)}
+
+h1{
+  margin:0;font-family:var(--display);
+  font-size:clamp(2.6rem,7.5vw,5.4rem);
+  line-height:.94;
+  font-weight:var(--h1-weight);
+  letter-spacing:var(--h1-track);
+  text-transform:var(--h1-case);
+  color:var(--ink);
+}
+h1 .l2{display:block;color:var(--muted);font-weight:var(--h1-l2-weight)}
+[data-skin="u24"] h1{line-height:.88}
+[data-skin="u24"] h1 .l2{display:inline-block;background:var(--accent);color:var(--accent-ink);padding:0 .16em;margin-top:.06em}
+[data-skin="brave"] h1 .l2{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-skin="diia"] h1{font-size:clamp(2.4rem,6.5vw,4.6rem);line-height:1.02}
+
+.hero-role{margin:1.5rem 0 2rem;font-family:var(--micro-font);font-size:11px;letter-spacing:var(--micro-track);text-transform:uppercase;color:var(--hot);font-weight:var(--micro-weight)}
+[data-skin="diia"] .hero-role{font-size:1.05rem;letter-spacing:0;text-transform:none;font-weight:500}
+[data-skin="u24"] .hero-role{font-size:13px}
+
+.hero-lede{font-size:1.02rem;max-width:34rem}
+[data-skin="diia"] .hero-lede{font-size:1.08rem}
+
+.hero-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2.25rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.6rem;
+  height:2.7rem;padding:0 1.15rem;
+  border:var(--bw) solid var(--line-strong);border-radius:var(--btn-radius);
+  font-family:var(--btn-font);font-size:var(--btn-size);letter-spacing:var(--btn-track);text-transform:var(--btn-case);font-weight:var(--btn-weight);
+  color:var(--ink);background:var(--panel);
+  transition:.24s var(--ease);
+}
+.btn:hover{background:var(--raise);border-color:var(--hot);color:var(--hot);transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
+[data-skin="brave"] .btn.primary{background:var(--grad)}
+.btn.primary:hover{color:var(--accent-ink);filter:brightness(1.08);border-color:transparent}
+.btn svg{width:13px;height:13px;flex-shrink:0}
+
+.dossier-card{padding:1.5rem;background:color-mix(in srgb,var(--panel) 90%,transparent);backdrop-filter:blur(8px)}
+.dossier-card .card-top{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-bottom:.9rem;margin-bottom:.9rem;border-bottom:1px solid var(--line)}
+.kv{display:grid;grid-template-columns:7.5rem 1fr;gap:.45rem 1rem;font-family:var(--mono);font-size:11.5px}
+[data-skin="diia"] .kv{font-family:var(--sans);font-size:14px;gap:.7rem 1rem}
+[data-skin="brave"] .kv{font-family:var(--sans);font-size:13px}
+.kv dt{color:var(--muted);letter-spacing:var(--micro-track);text-transform:var(--micro-case);font-size:9.5px;padding-top:.15rem}
+[data-skin="diia"] .kv dt{font-size:13px;letter-spacing:0;text-transform:none;padding-top:0}
+[data-skin="brave"] .kv dt{font-size:10px}
+.kv dd{margin:0;color:var(--ink)}
+.chip{
+  display:inline-flex;align-items:center;gap:.4rem;padding:.15rem .5rem;
+  border:1px solid var(--signal);border-radius:var(--r-pill);color:var(--signal);background:var(--signal-dim);
+  font-family:var(--micro-font);font-size:9.5px;letter-spacing:var(--micro-track);text-transform:uppercase;font-weight:var(--micro-weight);white-space:nowrap;
+}
+[data-skin="diia"] .chip{font-size:12px;letter-spacing:0;text-transform:none}
+.chip i{width:5px;height:5px;background:var(--signal);border-radius:50%;animation:blink 2s infinite;flex-shrink:0}
+
+.scroll-hint{position:absolute;bottom:1.75rem;left:0;z-index:2;display:flex;align-items:center;gap:.6rem;font-family:var(--micro-font);font-size:9.5px;letter-spacing:var(--micro-track);text-transform:uppercase;color:var(--faint)}
+.scroll-hint i{display:block;width:1.75rem;height:2px;background:var(--faint);animation:slide 2.4s ease-in-out infinite;border-radius:var(--r-pill)}
+@keyframes slide{0%,100%{transform:scaleX(.4);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   08 · STATISTIQUES
+   ═══════════════════════════════════════════════════════════════════════════ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--panel);overflow:hidden}
+.stat{padding:1.6rem 1.4rem;border-right:1px solid var(--line);position:relative;overflow:hidden}
+.stat:last-child{border-right:none}
+.stat::after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--grad);transition:width .8s var(--ease)}
+.stat.in::after{width:100%}
+.stat .n{font-family:var(--mono);font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:500;letter-spacing:-.03em;color:var(--ink);line-height:1}
+[data-skin="u24"] .stat .n{font-family:var(--display);font-weight:900;font-size:clamp(2.2rem,4.6vw,3.4rem);letter-spacing:-.05em}
+[data-skin="diia"] .stat .n,[data-skin="brave"] .stat .n{font-family:var(--display);font-weight:600}
+.stat .n .suf{font-size:.5em;color:var(--hot);vertical-align:top;margin-left:.1em}
+.stat .l{margin-top:.65rem;font-family:var(--micro-font);font-size:9.5px;letter-spacing:var(--micro-track);text-transform:var(--micro-case);color:var(--muted);line-height:1.5;font-weight:var(--micro-weight)}
+[data-skin="diia"] .stat .l{font-size:13px}
+/* DIIA et BRAVE : cartes détachées plutôt qu'une bande découpée. */
+[data-skin="diia"] .stats,[data-skin="brave"] .stats{border:none;background:none;gap:.75rem;overflow:visible;box-shadow:none}
+[data-skin="diia"] .stat,[data-skin="brave"] .stat{background:var(--panel-2);border:none;border-radius:var(--r);box-shadow:var(--shadow-soft)}
+[data-skin="diia"] .stat::after,[data-skin="brave"] .stat::after{left:1.4rem;right:1.4rem;width:auto;transform:scaleX(0);transform-origin:left;border-radius:var(--r-pill)}
+[data-skin="diia"] .stat.in::after,[data-skin="brave"] .stat.in::after{transform:scaleX(1)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   09 · MATRICE DE CAPACITÉS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.tbl-wrap{overflow-x:auto;overflow-y:hidden;border-radius:var(--r)}
+.matrix{width:100%;min-width:32rem;table-layout:fixed;border-collapse:collapse;font-size:.92rem}
+.matrix th,.matrix td{padding:.9rem 1.1rem;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:middle}
+.matrix thead th{font-family:var(--micro-font);font-size:9.5px;letter-spacing:var(--micro-track);text-transform:uppercase;color:var(--muted);font-weight:var(--micro-weight);border-bottom:var(--bw) solid var(--line)}
+[data-skin="diia"] .matrix thead th{font-size:12px;letter-spacing:0;text-transform:none}
+.matrix thead th:not(:first-child),.matrix td:not(:first-child){text-align:center;width:6.5rem}
+.matrix tbody tr{transition:background .2s}
+.matrix tbody tr:hover{background:var(--panel-2)}
+.matrix tbody tr:last-child td{border-bottom:none}
+.matrix td:first-child{color:var(--ink)}
+.matrix .sub{display:block;font-size:.82rem;color:var(--muted);margin-top:.15rem}
+.dot{display:inline-block;width:8px;height:8px;background:var(--hot);transform:rotate(45deg)}
+[data-skin="diia"] .dot,[data-skin="brave"] .dot{transform:none;border-radius:50%}
+[data-skin="u24"] .dot{background:var(--accent);border:1px solid var(--ink)}
+.dot.off{background:transparent;border:1px solid var(--faint)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   10 · DOSSIERS PROJET
+   ═══════════════════════════════════════════════════════════════════════════ */
+.dossier{margin-bottom:3rem;background:var(--panel);overflow:hidden}
+.dossier:last-child{margin-bottom:0}
+[data-skin="u24"] .dossier{border-width:2px}
+[data-skin="diia"] .dossier{border-color:transparent;box-shadow:var(--shadow-soft)}
+
+.d-head{display:flex;gap:clamp(1rem,3vw,2.25rem);padding:clamp(1.5rem,3vw,2.4rem);border-bottom:1px solid var(--line)}
+[data-skin="diia"] .d-head{border-bottom-color:var(--line-2)}
+.d-num{font-family:var(--mono);font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:.85;color:var(--faint);letter-spacing:-.04em;flex-shrink:0}
+[data-skin="u24"] .d-num{font-family:var(--display);font-weight:900;color:var(--accent);-webkit-text-stroke:0;font-size:clamp(2.4rem,5vw,4rem)}
+[data-skin="brave"] .d-num{font-family:var(--display);font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-skin="diia"] .d-num{font-family:var(--display);font-weight:500}
+.d-head-main{flex:1;min-width:0}
+.d-head h3{margin:.5rem 0 .7rem;font-family:var(--display);font-size:clamp(1.35rem,2.8vw,2rem);font-weight:var(--h2-weight);letter-spacing:var(--h2-track);color:var(--ink);line-height:1.14}
+[data-skin="u24"] .d-head h3{font-weight:800}
+.d-summary{margin:0;font-size:1rem;color:var(--ink-2);max-width:40rem}
+
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));margin:0;border-bottom:1px solid var(--line);background:var(--panel-2)}
+[data-skin="diia"] .specs{background:transparent;border-bottom-color:var(--line-2)}
+.specs > div{padding:.9rem 1.2rem;border-right:1px solid var(--line-2)}
+.specs > div:last-child{border-right:none}
+.specs dt{font-family:var(--micro-font);font-size:9px;letter-spacing:var(--micro-track);text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;font-weight:var(--micro-weight)}
+[data-skin="diia"] .specs dt{font-size:12px;letter-spacing:0;text-transform:none}
+.specs dd{margin:0;font-family:var(--mono);font-size:11.5px;color:var(--ink)}
+[data-skin="diia"] .specs dd,[data-skin="brave"] .specs dd{font-family:var(--sans);font-size:14px;font-weight:500}
+[data-skin="u24"] .specs dd{font-family:var(--sans);font-weight:600;font-size:13px}
+
+.d-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.d-body > *{padding:clamp(1.5rem,3vw,2.4rem);min-width:0}
+.d-prose{border-right:1px solid var(--line-2)}
+.d-demo{background:var(--panel-2)}
+[data-skin="diia"] .d-demo{background:var(--bg-2)}
+
+.notes{margin:1.75rem 0 0;padding:0;list-style:none;counter-reset:n}
+.notes li{position:relative;margin-bottom:1.2rem;padding-left:2.15rem;font-size:.94rem;color:var(--ink-2)}
+.notes li::before{counter-increment:n;content:counter(n,decimal-leading-zero);position:absolute;left:0;top:.12rem;font-family:var(--micro-font);font-size:9.5px;letter-spacing:.1em;color:var(--hot);font-weight:var(--micro-weight)}
+[data-skin="diia"] .notes li::before{font-size:12px;letter-spacing:0}
+.notes li::after{content:"";position:absolute;left:1.35rem;top:.5rem;bottom:.15rem;width:2px;background:var(--line);border-radius:var(--r-pill)}
+.notes li:last-child{margin-bottom:0}
+
+.subhead{display:flex;align-items:center;gap:.7rem;margin:2.25rem 0 0}
+.subhead .rule{flex:1;height:1px;background:var(--line)}
+
+.result{margin-top:1.6rem;padding:1.05rem 1.2rem;background:var(--signal-dim);border-left:3px solid var(--signal);border-radius:var(--r-sm);font-size:.93rem;color:var(--ink-2)}
+[data-skin="diia"] .result,[data-skin="brave"] .result{border-left:none;border-radius:var(--r-sm)}
+.result b{color:var(--signal);font-weight:600}
+
+.stackline{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;padding:1.2rem clamp(1.5rem,3vw,2.4rem);border-top:1px solid var(--line)}
+.tag{font-family:var(--tag-font);font-size:10.5px;letter-spacing:.05em;padding:.28rem .6rem;border:var(--bw) solid var(--line);border-radius:var(--r-pill);color:var(--muted);transition:.2s}
+[data-skin="diia"] .tag{font-size:13px;letter-spacing:0;padding:.3rem .8rem}
+[data-skin="u24"] .tag{font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:10px}
+.tag:hover{color:var(--ink);border-color:var(--line-strong);background:var(--raise)}
+.tag.hit{color:var(--hot);border-color:var(--hot-line);background:var(--hot-dim)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   11 · WIDGETS DE DÉMONSTRATION
+   ═══════════════════════════════════════════════════════════════════════════ */
+.w-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+.w-head .rule{flex:1;height:1px;background:var(--line)}
+.w-act{font-family:var(--micro-font);font-size:9.5px;letter-spacing:var(--micro-track);text-transform:uppercase;font-weight:var(--micro-weight);color:var(--muted);border:var(--bw) solid var(--line);border-radius:var(--r-pill);padding:.25rem .6rem;transition:.2s}
+[data-skin="diia"] .w-act{font-size:12px;letter-spacing:0;text-transform:none}
+.w-act:hover{color:var(--hot);border-color:var(--hot-line);background:var(--hot-dim)}
+
+.frame{border:var(--bw) solid var(--line);border-radius:var(--r-sm);background:var(--panel);position:relative;overflow:hidden}
+.frame-bar{display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;border-bottom:1px solid var(--line);background:var(--raise)}
+.frame-bar .dots{display:flex;gap:4px}
+.frame-bar .dots i{width:6px;height:6px;border-radius:50%;background:var(--faint)}
+.frame-bar .t{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.frame-bar .r{margin-left:auto;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+
+.media{border:var(--bw) solid var(--line);border-radius:var(--r-sm);line-height:0;background:#000;position:relative;overflow:hidden}
+.media video{display:block;width:100%;height:auto}
+.media-cap{position:absolute;top:.6rem;left:.6rem;z-index:2;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.62);padding:.2rem .5rem;border-radius:var(--r-pill);pointer-events:none}
+.caption{margin-top:.75rem;font-size:.84rem;color:var(--muted);max-width:var(--text)}
+
+/* — Terminal Telegram — */
+.tg{padding:.9rem;height:20rem;overflow:hidden;display:flex;flex-direction:column;gap:.5rem;justify-content:flex-end}
+.tg-msg{max-width:88%;padding:.6rem .8rem;font-family:var(--mono);font-size:11px;line-height:1.55;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel-2);color:var(--ink-2);animation:msgIn .32s var(--ease) both;white-space:pre-wrap;word-break:break-word}
+[data-skin="diia"] .tg-msg,[data-skin="brave"] .tg-msg{border-radius:14px}
+.tg-msg.me{align-self:flex-end;background:var(--hot-dim);border-color:var(--hot-line);color:var(--ink)}
+.tg-msg.sys{align-self:center;max-width:100%;background:transparent;border:none;color:var(--faint);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;padding:.2rem}
+.tg-msg.ok{border-color:var(--signal);background:var(--signal-dim)}
+.tg-msg b{color:var(--ink);font-weight:600}
+.tg-msg .g{color:var(--signal)}
+.tg-msg .o{color:var(--warn)}
+.tg-msg .a{color:var(--hot)}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tg-keys{display:flex;gap:.35rem;padding:.6rem .8rem;border-top:1px solid var(--line);background:var(--raise);flex-wrap:wrap}
+.tg-key{font-family:var(--tag-font);font-size:9.5px;letter-spacing:.08em;padding:.3rem .6rem;border:1px solid var(--line);border-radius:var(--r-pill);color:var(--muted)}
+[data-skin="diia"] .tg-key{font-size:12px;letter-spacing:0}
+.tg-key.hot{color:var(--hot);border-color:var(--hot-line);background:var(--hot-dim)}
+
+/* — Calculateur d'arbitrage — */
+.mk{padding:1.1rem}
+.mk-title{font-size:.97rem;color:var(--ink);margin-bottom:.3rem;font-weight:500}
+.mk-sub{font-family:var(--micro-font);font-size:9.5px;letter-spacing:var(--micro-track);text-transform:uppercase;color:var(--muted);display:flex;gap:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--line);margin-bottom:.9rem}
+[data-skin="diia"] .mk-sub{font-size:12px;letter-spacing:0;text-transform:none}
+.out{display:grid;grid-template-columns:1.6rem 1fr 3.2rem;gap:.65rem;align-items:center;margin-bottom:.75rem}
+.out .av{width:1.6rem;height:1.6rem;display:grid;place-items:center;background:var(--raise);border:1px solid var(--line);border-radius:var(--r-pill);font-family:var(--mono);font-size:9.5px;color:var(--muted)}
+.out .nm{font-size:.87rem;color:var(--ink-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.out .pc{font-family:var(--mono);font-size:11.5px;color:var(--ink);text-align:right}
+.out-slider{grid-column:1/-1;margin-top:-.3rem}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--line-strong);border-radius:var(--r-pill);outline:none;cursor:ew-resize}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;background:var(--accent);border:2px solid var(--bg);border-radius:var(--r-pill);cursor:ew-resize;transition:transform .15s}
+[data-skin="palantir"] input[type=range]::-webkit-slider-thumb,[data-skin="u24"] input[type=range]::-webkit-slider-thumb{border-radius:0}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--accent);border:2px solid var(--bg);border-radius:50%;cursor:ew-resize}
+
+.mk-sum{margin-top:1.1rem;padding-top:.95rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:11.5px}
+[data-skin="diia"] .mk-sum,[data-skin="brave"] .mk-sum{font-family:var(--sans);font-size:13px}
+.mk-row{display:flex;justify-content:space-between;gap:.9rem;padding:.3rem 0;color:var(--muted)}
+.mk-row b{color:var(--ink);font-weight:600;white-space:nowrap}
+.mk-verdict{margin-top:.8rem;padding:.75rem .9rem;border-left:3px solid var(--faint);border-radius:var(--r-sm);background:var(--panel-2);font-family:var(--micro-font);font-size:11px;color:var(--muted);transition:.3s;letter-spacing:.02em}
+[data-skin="diia"] .mk-verdict,[data-skin="brave"] .mk-verdict{border-left:none;font-size:13px}
+.mk-verdict.hit{border-color:var(--signal);background:var(--signal-dim);color:var(--signal)}
+.mk-verdict.no{border-color:var(--warn);background:var(--warn-dim);color:var(--warn)}
+.mk-gauge{height:5px;background:var(--line);margin-top:.8rem;position:relative;overflow:hidden;border-radius:var(--r-pill)}
+.mk-gauge i{position:absolute;top:0;left:0;height:100%;background:var(--hot);border-radius:var(--r-pill);transition:width .25s var(--ease),background .25s}
+.mk-gauge b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);left:100%}
+
+/* — Extraction OSM — */
+.osm{display:grid;gap:.75rem}
+.osm-map{position:relative;height:11rem;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel);overflow:hidden;margin:.6rem .6rem 0}
+.osm-map svg{position:absolute;inset:0;width:100%;height:100%}
+.osm-map .sweep{position:absolute;top:0;bottom:0;width:2px;background:var(--hot);box-shadow:0 0 24px 6px var(--hot-dim);opacity:0}
+.osm-map .sweep.run{animation:sweep 2.2s linear}
+@keyframes sweep{0%{left:0;opacity:.9}100%{left:100%;opacity:0}}
+.osm-pin{opacity:0;transform-box:fill-box;transform-origin:center}
+.osm-pin.on{animation:pinIn .45s var(--ease) forwards}
+@keyframes pinIn{0%{opacity:0;transform:scale(.2)}70%{opacity:1;transform:scale(1.5)}100%{opacity:1;transform:scale(1)}}
+
+.osm-tbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:10px}
+.osm-tbl th{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--line);color:var(--muted);font-weight:500;letter-spacing:.1em;text-transform:uppercase;font-size:8.5px}
+.osm-tbl td{padding:.32rem .5rem;border-bottom:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.osm-tbl tr{opacity:0}
+.osm-tbl tr.on{animation:bootIn .3s var(--ease) forwards}
+.redact{display:inline-block;height:.65rem;background:var(--faint);opacity:.45;vertical-align:middle;border-radius:2px}
+.osm-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.6rem}
+.osm-tab{font-family:var(--mono);font-size:9.5px;padding:.28rem .6rem;border:var(--bw) solid var(--line);border-radius:var(--r-pill);color:var(--muted);transition:.2s}
+.osm-tab.on{color:var(--hot);border-color:var(--hot-line);background:var(--hot-dim)}
+.osm-tab:hover{color:var(--ink)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   12 · PILE TECHNIQUE
+   ═══════════════════════════════════════════════════════════════════════════ */
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));border-top:var(--bw) solid var(--line);border-left:var(--bw) solid var(--line)}
+.stack-item{padding:1.1rem 1.2rem;border-right:var(--bw) solid var(--line);border-bottom:var(--bw) solid var(--line);position:relative;transition:background .25s;background:var(--panel)}
+.stack-item:hover{background:var(--raise)}
+.stack-item .nm{font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-bottom:.3rem}
+[data-skin="diia"] .stack-item .nm,[data-skin="brave"] .stack-item .nm{font-family:var(--sans);font-size:15px;font-weight:600}
+[data-skin="u24"] .stack-item .nm{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.stack-item .rl{font-size:.81rem;color:var(--muted);line-height:1.45}
+[data-skin="diia"] .stack-item .rl{font-size:.88rem}
+.stack-item .ix{position:absolute;top:.65rem;right:.8rem;font-family:var(--mono);font-size:9px;color:var(--faint)}
+/* DIIA et BRAVE : grille de cartes avec gouttières. */
+[data-skin="diia"] .stack-grid,[data-skin="brave"] .stack-grid{border:none;gap:.7rem}
+[data-skin="diia"] .stack-item,[data-skin="brave"] .stack-item{border:none;border-radius:var(--r);background:var(--panel-2);box-shadow:var(--shadow-soft)}
+[data-skin="diia"] .stack-item:hover,[data-skin="brave"] .stack-item:hover{transform:translateY(-2px)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   13 · CONTACT
+   ═══════════════════════════════════════════════════════════════════════════ */
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(2rem,5vw,4rem);align-items:start}
+.ch{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.25rem;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--panel);margin-bottom:.65rem;transition:.24s var(--ease)}
+[data-skin="diia"] .ch{border-color:transparent;background:var(--panel-2);box-shadow:var(--shadow-soft)}
+.ch:hover{border-color:var(--hot-line);background:var(--raise);transform:translateX(4px)}
+.ch .ic{width:2rem;height:2rem;border:1px solid var(--line);border-radius:var(--r-pill);display:grid;place-items:center;color:var(--hot);flex-shrink:0}
+.ch .ic svg{width:14px;height:14px}
+.ch .tx{flex:1;min-width:0}
+.ch .lb{display:block;font-family:var(--micro-font);font-size:9px;letter-spacing:var(--micro-track);text-transform:uppercase;color:var(--muted);font-weight:var(--micro-weight)}
+[data-skin="diia"] .ch .lb{font-size:12px;letter-spacing:0;text-transform:none}
+.ch .vl{display:block;font-family:var(--mono);font-size:12.5px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[data-skin="diia"] .ch .vl,[data-skin="brave"] .ch .vl{font-family:var(--sans);font-size:15px;font-weight:500}
+.ch .go{font-family:var(--mono);font-size:11px;color:var(--faint);flex-shrink:0}
+.ch:hover .go{color:var(--hot)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   14 · PIED DE PAGE
+   ═══════════════════════════════════════════════════════════════════════════ */
+footer{border-top:var(--bw) solid var(--line);padding:2.5rem 0;background:var(--bg-2)}
+.foot{display:flex;flex-wrap:wrap;gap:.9rem 2rem;align-items:center}
+.foot .micro{color:var(--faint)}
+.foot .sp{margin-left:auto;display:flex;gap:1.25rem}
+#skinNote{color:var(--muted);max-width:34rem}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   15 · SUPERPOSITIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.overlay{position:fixed;inset:0;z-index:200;display:none;background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.overlay.open{display:block;animation:fade .18s var(--ease)}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+#palette .box{width:min(38rem,92vw);margin:14vh auto 0;background:var(--panel);border:var(--bw) solid var(--line-strong);border-radius:var(--r);box-shadow:var(--shadow);animation:rise .22s var(--ease);overflow:hidden}
+@keyframes rise{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.pal-in{display:flex;align-items:center;gap:.75rem;padding:.95rem 1.15rem;border-bottom:1px solid var(--line)}
+.pal-in svg{width:14px;height:14px;color:var(--muted);flex-shrink:0}
+.pal-in input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:var(--mono);font-size:13px;min-width:0}
+[data-skin="diia"] .pal-in input,[data-skin="brave"] .pal-in input{font-family:var(--sans);font-size:15px}
+.pal-in input::placeholder{color:var(--faint)}
+.pal-list{max-height:22rem;overflow-y:auto;padding:.4rem}
+.pal-item{display:flex;align-items:center;gap:.85rem;padding:.62rem .8rem;cursor:pointer;font-family:var(--mono);font-size:11.5px;color:var(--ink-2);border:1px solid transparent;border-radius:var(--r-sm)}
+[data-skin="diia"] .pal-item,[data-skin="brave"] .pal-item{font-family:var(--sans);font-size:14px}
+.pal-item.sel{background:var(--hot-dim);border-color:var(--hot-line);color:var(--ink)}
+.pal-item .k{font-family:var(--micro-font);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);width:4.6rem;flex-shrink:0}
+.pal-item .h{margin-left:auto;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+.pal-empty{padding:1.5rem;text-align:center;font-family:var(--mono);font-size:11px;color:var(--faint)}
+.pal-foot{display:flex;gap:1.25rem;padding:.65rem 1.15rem;border-top:1px solid var(--line);font-family:var(--micro-font);font-size:9px;letter-spacing:var(--micro-track);text-transform:uppercase;color:var(--faint)}
+[data-skin="diia"] .pal-foot{font-size:11px;letter-spacing:0;text-transform:none}
+
+#help .box{width:min(32rem,92vw);margin:14vh auto 0;padding:1.6rem;background:var(--panel);border:var(--bw) solid var(--line-strong);border-radius:var(--r);box-shadow:var(--shadow);animation:rise .22s var(--ease)}
+.keys{display:grid;gap:.55rem;margin-top:1.2rem;font-family:var(--mono);font-size:11px}
+[data-skin="diia"] .keys,[data-skin="brave"] .keys{font-family:var(--sans);font-size:13px}
+.keys div{display:flex;align-items:center;gap:.9rem;color:var(--ink-2)}
+.keys kbd{min-width:1.7rem;padding:.15rem .45rem;text-align:center;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--raise);color:var(--ink);font-family:var(--mono);font-size:10px}
+.keys .d{margin-left:auto;color:var(--muted);text-align:right}
+
+#toast{position:fixed;left:50%;bottom:2rem;transform:translate(-50%,150%);z-index:300;display:flex;align-items:center;gap:.6rem;padding:.75rem 1.15rem;background:var(--raise);border:var(--bw) solid var(--hot-line);border-radius:var(--r-pill);font-family:var(--micro-font);font-size:10.5px;letter-spacing:var(--micro-track);text-transform:var(--micro-case);color:var(--ink);transition:transform .4s var(--ease);box-shadow:var(--shadow)}
+[data-skin="diia"] #toast{font-size:13px}
+#toast.show{transform:translate(-50%,0)}
+#toast i{width:6px;height:6px;background:var(--signal);border-radius:50%;flex-shrink:0}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   16 · ADAPTATIF
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width:1240px){
+  #navlinks{display:none}
+  #skins{margin-left:auto}
+}
+@media (max-width:1080px){
+  .hero-grid{grid-template-columns:1fr;gap:2.5rem;align-items:start}
+  .d-body{grid-template-columns:1fr}
+  .d-prose{border-right:none;border-bottom:1px solid var(--line-2)}
+  .contact-grid{grid-template-columns:1fr}
+}
+@media (max-width:900px){
+  #clock{display:none}
+}
+@media (max-width:820px){
+  #rail,#railTop{display:none}
+  #page{padding-left:0}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  [data-skin="palantir"] .stat:nth-child(2n),[data-skin="u24"] .stat:nth-child(2n){border-right:none}
+  [data-skin="palantir"] .stat:nth-child(-n+2),[data-skin="u24"] .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .matrix thead th:not(:first-child),.matrix td:not(:first-child){width:3.4rem}
+  .matrix th,.matrix td{padding:.75rem .55rem}
+  #skins{display:none}
+  #skinCycle{display:flex}
+}
+@media (max-width:640px){
+  body{font-size:15px}
+  .bar-inner{gap:.5rem}
+  .brand-sub,.brand .sep{display:none}
+  .tool span:not(#langLabel):not(#skinCycleLabel){display:none}
+  .tool kbd{display:none}
+  .tool{padding:0 .6rem}
+  .d-head{flex-direction:column;gap:.4rem}
+  .d-num{font-size:1.6rem}
+  .kv{grid-template-columns:6rem 1fr}
+  .hero-cta{flex-direction:column;align-items:stretch}
+  .hero-cta .btn{justify-content:center}
+  .foot .sp{margin-left:0}
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   17 · IMPRESSION — la page redevient un CV sobre, quel que soit l'habillage
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print{
+  /* Même spécificité que les blocs d'habillage, déclaré après : c'est celui-ci qui gagne. */
+  :root,:root[data-skin][data-theme]{
+    --bg:#fff;--bg-2:#fff;--panel:#fff;--panel-2:#fff;--raise:#fff;
+    --ink:#000;--ink-2:#222;--muted:#555;--faint:#777;
+    --line:#ccc;--line-2:#e5e5e5;--line-strong:#999;
+    --hot:#000;--hot-dim:#f2f2f2;--hot-line:#bbb;
+    --accent:#000;--accent-ink:#fff;--grad:linear-gradient(90deg,#000,#000);
+    --signal:#0a6b3d;--signal-dim:#f4f8f6;--warn:#8a3a12;--warn-dim:#faf5f2;
+    --r:0;--r-sm:0;--r-pill:0;--bw:1px;--shadow:none;--shadow-soft:none;
+    --sans:"IBM Plex Sans",system-ui,sans-serif;--display:"IBM Plex Sans",system-ui,sans-serif;
+    --h1-case:none;--h1-weight:600;--h2-case:none;
+    --micro-font:var(--mono);--micro-case:uppercase;--micro-track:.14em;--micro-size:9px;
+  }
+  body::before,#boot,#flash,#topbar,#rail,#railTop,#progress,.overlay,#toast,#net,.scroll-hint,.hero-cta,.d-demo,.osm,.tg-keys,#skinNote,.foot .sp{display:none!important}
+  #page{padding:0}
+  /* Neutralise les traitements typographiques propres aux habillages. */
+  h1 .l2{background:none!important;color:#555!important;padding:0!important;display:block!important;-webkit-text-fill-color:#555!important}
+  .d-num{color:#999!important;-webkit-text-fill-color:#999!important;background:none!important}
+  .section{padding:1.5rem 0;break-inside:avoid}
+  .dossier{break-inside:avoid;border:1px solid #ccc;box-shadow:none}
+  .d-body{grid-template-columns:1fr}
+  .d-prose{border-right:none}
+  .reveal{opacity:1!important;transform:none!important}
+  a[href^="http"]::after,a[href^="mailto"]::after{content:" (" attr(href) ")";font-size:.72em;color:#666}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ══════════ DÉMARRAGE ══════════ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-inner">
+    <div class="boot-mark">
+      <span class="diamond"></span>
+      <span>ANTON TKACHUK</span>
+      <span class="sep">/</span>
+      <span>DOSSIER</span>
+    </div>
+    <div id="bootLog"></div>
+    <div class="boot-bar"><i></i></div>
+  </div>
+</div>
+
+<div id="flash" aria-hidden="true"></div>
+<div id="progress"></div>
+
+<!-- ══════════ BARRE ══════════ -->
+<header id="topbar">
+  <div class="bar-inner">
+    <a href="#hero" class="brand">
+      <span class="diamond"></span>
+      <span class="brand-name">A. Tkachuk</span>
+      <span class="sep">/</span>
+      <span class="brand-sub" data-i18n="brand.sub">Dossier</span>
+    </a>
+
+    <nav id="navlinks">
+      <a href="#overview" data-i18n="nav.overview">Aperçu</a>
+      <a href="#projects" data-i18n="nav.projects">Travaux</a>
+      <a href="#stack" data-i18n="nav.stack">Pile</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </nav>
+
+    <div id="skins" role="group" aria-label="Habillage">
+      <button data-skin-btn="palantir">Palantir</button>
+      <button data-skin-btn="u24">United24</button>
+      <button data-skin-btn="diia">Diia</button>
+      <button data-skin-btn="brave">Brave</button>
+    </div>
+
+    <div class="bar-tools">
+      <button class="tool" id="skinCycle" data-i18n-aria="ui.skinAria"><span id="skinCycleLabel">Palantir</span></button>
+      <button class="tool" id="btnPal" data-i18n-aria="ui.searchAria">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" width="11" height="11"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
+        <span data-i18n="ui.search">Rechercher</span>
+        <kbd>⌘K</kbd>
+      </button>
+      <button class="tool" id="btnLang" data-i18n-aria="ui.langAria"><span id="langLabel">EN</span></button>
+      <button class="tool" id="btnTheme" data-i18n-aria="ui.themeAria">
+        <svg id="icoTheme" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" width="12" height="12"></svg>
+      </button>
+      <div id="clock"><span class="live-dot"></span><span id="clockTime">--:--:--</span><span class="sep">UTC</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ RAIL ══════════ -->
+<nav id="rail" aria-hidden="true">
+  <a class="rail-tick" href="#hero"     data-sec="hero"><i></i><span data-i18n="rail.hero">Identité</span></a>
+  <a class="rail-tick" href="#overview" data-sec="overview"><i></i><span data-i18n="rail.overview">Aperçu</span></a>
+  <a class="rail-tick" href="#projects" data-sec="projects"><i></i><span data-i18n="rail.projects">Travaux</span></a>
+  <a class="rail-tick" href="#stack"    data-sec="stack"><i></i><span data-i18n="rail.stack">Pile</span></a>
+  <a class="rail-tick" href="#contact"  data-sec="contact"><i></i><span data-i18n="rail.contact">Contact</span></a>
+</nav>
+<div id="railTop">
+  <button id="btnTop" aria-label="Top">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg>
+  </button>
+</div>
+
+<div id="page">
+
+<!-- ══════════ HÉROS ══════════ -->
+<section id="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="shell">
+    <div class="hero-grid">
+
+      <div>
+        <div class="hero-eyebrow">
+          <span class="bar"></span>
+          <span class="micro" data-i18n="hero.eyebrow">Dossier personnel · EPFL — Lausanne</span>
+        </div>
+
+        <h1><span class="l1">Anton</span><span class="l2">Tkachuk</span></h1>
+
+        <p class="hero-role" data-i18n="hero.role">Apprenti développeur d'applications</p>
+
+        <div class="hero-lede">
+          <p data-i18n="hero.lede1">Je construis de petits outils qui vont chercher des données quelque part et en font quelque chose. Un terminal de trading qui vit dans une messagerie, un scanner qui surveille les marchés de prédiction à la recherche de prix qui ne s'additionnent plus, un script qui transforme des données cartographiques en liste de boutiques à contacter.</p>
+          <p data-i18n="hero.lede2">En voici trois, chacun avec la partie qui a vraiment posé problème.</p>
+        </div>
+
+        <div class="hero-cta">
+          <a class="btn primary" href="#projects">
+            <span data-i18n="hero.cta1">Ouvrir les dossiers</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <button class="btn" id="btnCopy">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5.5" y="5.5" width="8" height="8" rx="1"/><path d="M10.5 2.5h-8v8"/></svg>
+            <span data-i18n="hero.cta2">Copier l'e-mail</span>
+          </button>
+        </div>
+      </div>
+
+      <aside class="dossier-card panel">
+        <div class="card-top">
+          <span class="micro" data-i18n="card.title">Fiche · 001</span>
+          <span class="chip"><i></i><span data-i18n="card.status">Disponible</span></span>
+        </div>
+        <dl class="kv">
+          <dt data-i18n="card.k1">Base</dt>      <dd data-i18n="card.v1">Lausanne, CH</dd>
+          <dt data-i18n="card.k2">Formation</dt> <dd data-i18n="card.v2">EPFL — apprentissage</dd>
+          <dt data-i18n="card.k3">Domaine</dt>   <dd data-i18n="card.v3">Outils de données, automatisation</dd>
+          <dt data-i18n="card.k4">Dossiers</dt>  <dd data-i18n="card.v4">3 actifs</dd>
+          <dt data-i18n="card.k5">Langue</dt>    <dd>FR · EN</dd>
+          <dt data-i18n="card.k6">Contact</dt>   <dd><a class="link" href="mailto:anton.tkachuk@epfl.ch">anton.tkachuk@epfl.ch</a></dd>
+        </dl>
+      </aside>
+
+    </div>
+  </div>
+  <div class="shell scroll-hint"><i></i><span data-i18n="hero.scroll">Défiler</span></div>
+</section>
+
+<!-- ══════════ APERÇU ══════════ -->
+<section id="overview" class="section">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <span class="idx">01</span>
+      <h2 data-i18n="sec.overview">Aperçu</h2>
+      <span class="tail" data-i18n="sec.overviewTail">Chiffres & couverture</span>
+    </div>
+
+    <div class="stats reveal" id="stats">
+      <div class="stat"><div class="n" data-count="3">0</div>  <div class="l" data-i18n="stat.1">Outils livrés</div></div>
+      <div class="stat"><div class="n" data-count="13">0</div> <div class="l" data-i18n="stat.2">Technologies employées</div></div>
+      <div class="stat"><div class="n" data-count="185" data-div="100" data-suf="%">0</div><div class="l" data-i18n="stat.3">Écart réel détecté sur Polymarket</div></div>
+      <div class="stat"><div class="n" data-count="0">0</div>  <div class="l" data-i18n="stat.4">Dépendance dans cette page</div></div>
+    </div>
+
+    <div class="subhead reveal" style="margin-top:3.5rem">
+      <span class="micro" data-i18n="sec.matrix">Matrice de capacités</span>
+      <span class="rule"></span>
+    </div>
+
+    <div class="panel reveal" style="margin-top:1rem">
+      <div class="tbl-wrap">
+      <table class="matrix">
+        <thead>
+          <tr><th data-i18n="mx.head">Domaine</th><th>001</th><th>002</th><th>003</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span data-i18n="mx.r1">Intégration d'API tierces</span><span class="sub" data-i18n="mx.r1s">Jupiter, Helius, Gamma, CLOB, Overpass</span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr>
+          <tr><td><span data-i18n="mx.r2">Interfaces conversationnelles</span><span class="sub" data-i18n="mx.r2s">aiogram 3, machines à états, claviers en ligne</span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot off"></span></td></tr>
+          <tr><td><span data-i18n="mx.r3">Réseau asynchrone</span><span class="sub" data-i18n="mx.r3s">asyncio, httpx, requêtes groupées</span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot off"></span></td></tr>
+          <tr><td><span data-i18n="mx.r4">Gestion des cas d'échec</span><span class="sub" data-i18n="mx.r4s">replis, valeurs par défaut sûres, diagnostic</span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr>
+          <tr><td><span data-i18n="mx.r5">Arithmétique exacte</span><span class="sub" data-i18n="mx.r5s">entiers bruts, décimales, pas d'arrondi prématuré</span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot off"></span></td></tr>
+          <tr><td><span data-i18n="mx.r6">Données géospatiales</span><span class="sub" data-i18n="mx.r6s">Overpass QL, tags OSM, export CSV</span></td><td><span class="dot off"></span></td><td><span class="dot off"></span></td><td><span class="dot"></span></td></tr>
+          <tr><td><span data-i18n="mx.r7">Nettoyage et dédoublonnage</span><span class="sub" data-i18n="mx.r7s">fusion d'entrées, filtres de complétude</span></td><td><span class="dot off"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TRAVAUX ══════════ -->
+<section id="projects" class="section">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <span class="idx">02</span>
+      <h2 data-i18n="sec.projects">Travaux</h2>
+      <span class="tail" data-i18n="sec.projectsTail">3 dossiers</span>
+    </div>
+
+    <!-- ────── 001 · SOLANA ────── -->
+    <article class="dossier panel reveal" id="d1">
+      <div class="d-head">
+        <div class="d-num">001</div>
+        <div class="d-head-main">
+          <div class="micro" data-i18n="p1.kicker">Bot Telegram · Solana · exécution</div>
+          <h3 data-i18n="p1.title">Un terminal de trading Solana dans Telegram</h3>
+          <p class="d-summary" data-i18n="p1.summary">Connecter un portefeuille, puis acheter ou vendre n'importe quel token en collant son adresse de contrat. Sans navigateur, sans extension, sans quitter la conversation.</p>
+        </div>
+      </div>
+
+      <dl class="specs">
+        <div><dt data-i18n="sp.type">Type</dt><dd data-i18n="p1.s1">Bot Telegram</dd></div>
+        <div><dt data-i18n="sp.net">Réseau</dt><dd>Solana</dd></div>
+        <div><dt data-i18n="sp.exec">Exécution</dt><dd>Jupiter v6</dd></div>
+        <div><dt data-i18n="sp.state">État</dt><dd><span style="color:var(--signal)" data-i18n="sp.live">Fonctionnel</span></dd></div>
+      </dl>
+
+      <div class="d-body">
+        <div class="d-prose">
+          <p data-i18n="p1.b1">Une transaction complète tient en cinq touches. On colle une adresse, on saisit un montant, on lit ce qu'on va recevoir et ce qu'on recevra dans le pire des cas, on confirme. Le bot signe la transaction et renvoie un lien Solscan. La vente suit le même chemin, mais en pourcentage de ce qu'on détient.</p>
+          <p data-i18n="p1.b2">L'essentiel du travail est parti dans les cas d'échec plutôt que dans le chemin nominal. Un bot de trading qui affiche un compteur puis meurt est pire qu'un bot qui refuse la transaction en disant pourquoi.</p>
+
+          <div class="subhead"><span class="micro" data-i18n="ui.hard">Ce qui a posé problème</span><span class="rule"></span></div>
+          <ul class="notes">
+            <li data-i18n="p1.n1">Les tokens récents n'apparaissent dans la liste de Jupiter qu'au bout de quelques heures, et sans le nombre de décimales on ne peut pas calculer un montant juste. Le bot lit alors le compte mint directement en RPC, puis retombe sur une valeur par défaut sûre. Un token sans nom se négocie quand même, on voit simplement une adresse tronquée à la place du ticker.</li>
+            <li data-i18n="p1.n2">La vue portefeuille tient en un seul appel réseau, pas trente et un. Helius renvoie ensemble les soldes, les décimales et les prix en dollars, donc aucune requête de prix token par token.</li>
+            <li data-i18n="p1.n3">La vente se fait en pourcentage, calculé sur le solde entier brut et non sur la valeur arrondie affichée. Les soldes de memecoins comptent douze chiffres. Les saisir à la main, c'est perdre de l'argent sur une faute de frappe, et arrondir avant le calcul laisse de la poussière sur une vente à 100&#160;%.</li>
+            <li data-i18n="p1.n4">Trois options de la requête de swap font le vrai travail. <code>wrapAndUnwrapSol</code> évite à l'utilisateur d'avoir à savoir ce qu'est du SOL enveloppé. Des frais de priorité automatiques empêchent les transactions d'échouer en silence quand le réseau est chargé. Une limite de calcul dynamique laisse passer les routes à plusieurs sauts.</li>
+          </ul>
+        </div>
+
+        <div class="d-demo">
+          <div class="w-head">
+            <span class="micro" data-i18n="p1.demo">Démonstration · flux d'achat</span>
+            <span class="rule"></span>
+            <button class="w-act" id="tgReplay" data-i18n="ui.replay">Rejouer</button>
+          </div>
+
+          <div class="frame">
+            <div class="frame-bar">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="t">@solana_terminal_bot</span>
+              <span class="r" id="tgStep">00/08</span>
+            </div>
+            <div class="tg" id="tgFeed"></div>
+            <div class="tg-keys" id="tgKeys"></div>
+          </div>
+
+          <div class="w-head" style="margin-top:1.75rem">
+            <span class="micro" data-i18n="p1.video">Capture · session réelle</span>
+            <span class="rule"></span>
+          </div>
+          <div class="media">
+            <span class="media-cap">REC · 001</span>
+            <!-- VIDEO-SRC -->
+            <video controls preload="metadata" playsinline>
+              <source src="IMG_8433.MP4" type="video/mp4">
+              <span data-i18n="ui.novideo">Votre navigateur ne peut pas lire cette vidéo.</span>
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <div class="stackline">
+        <span class="micro" style="margin-right:.5rem" data-i18n="ui.stack">Pile</span>
+        <span class="tag">Python</span><span class="tag">aiogram 3</span><span class="tag">Jupiter Aggregator v6</span>
+        <span class="tag">Helius RPC</span><span class="tag">Helius DAS</span><span class="tag">solders</span>
+      </div>
+    </article>
+
+    <!-- ────── 002 · POLYMARKET ────── -->
+    <article class="dossier panel reveal" id="d2">
+      <div class="d-head">
+        <div class="d-num">002</div>
+        <div class="d-head-main">
+          <div class="micro" data-i18n="p2.kicker">Scanner · marchés de prédiction · alertes</div>
+          <h3 data-i18n="p2.title">Un scanner d'arbitrage pour les marchés de prédiction</h3>
+          <p class="d-summary" data-i18n="p2.summary">Passe en revue chaque marché à issues multiples de Polymarket une fois par minute et envoie une alerte Telegram quand les prix cessent de s'additionner.</p>
+        </div>
+      </div>
+
+      <dl class="specs">
+        <div><dt data-i18n="sp.type">Type</dt><dd data-i18n="p2.s1">Scanner + alertes</dd></div>
+        <div><dt data-i18n="sp.market">Marché</dt><dd>Polymarket</dd></div>
+        <div><dt data-i18n="sp.cadence">Cadence</dt><dd data-i18n="p2.s3">60 s</dd></div>
+        <div><dt data-i18n="sp.state">État</dt><dd><span style="color:var(--signal)" data-i18n="sp.live">Fonctionnel</span></dd></div>
+      </dl>
+
+      <div class="d-body">
+        <div class="d-prose">
+          <p data-i18n="p2.b1">Sur un marché à plusieurs issues, une seule se réalisera. La part gagnante rapporte un dollar, donc les prix Oui de toutes les issues devraient s'additionner à un dollar. Quand leur somme tombe en dessous, on peut acheter le lot complet et détenir un dollar garanti pour moins d'un dollar. L'écart est le bénéfice, et il ne dépend pas de qui gagne.</p>
+          <p data-i18n="p2.b2">Le scanner récupère tous les marchés à issues multiples actifs, demande le prix médian de chaque issue en une seule requête groupée, en fait la somme, et alerte quand le total s'écarte suffisamment de un.</p>
+
+          <div class="result">
+            <span data-i18n="p2.result">Un passage en conditions réelles a trouvé <em>Balance of Power: 2026 Midterms</em> coté <b>1,85&#160;%</b> sous la parité, sur 22&#160;000&#160;$ de volume.</span>
+          </div>
+
+          <div class="subhead"><span class="micro" data-i18n="ui.hard">Ce qui a posé problème</span><span class="rule"></span></div>
+          <ul class="notes">
+            <li data-i18n="p2.n1">Le point d'accès aux prix groupés attend un tableau nu comme corps de requête, pas un objet qui l'enveloppe. Toutes les requêtes échouaient tant que je faisais confiance à la forme que j'avais supposée au lieu de lire ce que le serveur rejetait vraiment.</li>
+            <li data-i18n="p2.n2">Les marchés sans carnet d'ordres bilatéral n'ont pas de prix médian du tout. Ceux-là passent par une seconde source. Sans ce repli, le scanner sautait en silence un tiers du tableau.</li>
+            <li data-i18n="p2.n3">L'essentiel du débogage n'a pas porté sur la logique de détection mais sur la question : pourquoi n'a-t-il rien trouvé. D'où un script de diagnostic séparé qui affiche, marché par marché, quel filtre l'a écarté et pour quelle raison. Les devinettes sont devenues une liste.</li>
+          </ul>
+        </div>
+
+        <div class="d-demo">
+          <div class="w-head">
+            <span class="micro" data-i18n="p2.demo">Calculateur · déplacez les curseurs</span>
+            <span class="rule"></span>
+            <button class="w-act" id="mkRand" data-i18n="ui.shuffle">Marché aléatoire</button>
+          </div>
+
+          <div class="frame">
+            <div class="frame-bar">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="t">polymarket · multi-outcome</span>
+              <span class="r" id="mkVol">VOL 22 481 $</span>
+            </div>
+            <div class="mk">
+              <div class="mk-title" data-i18n="mk.title">Quelle équipe remporte le tournoi ?</div>
+              <div class="mk-sub">
+                <span data-i18n="mk.sub1">4 issues</span>
+                <span data-i18n="mk.sub2">Clôture le 3 nov. 2026</span>
+              </div>
+              <div id="mkOuts"></div>
+              <div class="mk-sum">
+                <div class="mk-row"><span data-i18n="mk.cost">Une part Oui sur chaque issue</span><b id="mkCost">94 ¢</b></div>
+                <div class="mk-row"><span data-i18n="mk.pay">Ce que rapporte l'issue gagnante</span><b>100 ¢</b></div>
+                <div class="mk-gauge"><i id="mkBar"></i><b></b></div>
+                <div class="mk-verdict" id="mkVerdict"></div>
+              </div>
+            </div>
+          </div>
+          <p class="caption" data-i18n="p2.caption">Modèle interactif. Dans la réalité l'écart tourne entre un et trois pour cent et se referme en quelques minutes ; les frais et la profondeur du carnet le réduisent encore.</p>
+        </div>
+      </div>
+
+      <div class="stackline">
+        <span class="micro" style="margin-right:.5rem" data-i18n="ui.stack">Pile</span>
+        <span class="tag">Python</span><span class="tag">asyncio</span><span class="tag">httpx</span>
+        <span class="tag">API Gamma</span><span class="tag">API CLOB</span><span class="tag">aiogram</span><span class="tag">loguru</span>
+      </div>
+    </article>
+
+    <!-- ────── 003 · OSM ────── -->
+    <article class="dossier panel reveal" id="d3">
+      <div class="d-head">
+        <div class="d-num">003</div>
+        <div class="d-head-main">
+          <div class="micro" data-i18n="p3.kicker">Extraction · OpenStreetMap · prospection</div>
+          <h3 data-i18n="p3.title">Trouver des boutiques par leurs tags cartographiques</h3>
+          <p class="d-summary" data-i18n="p3.summary">Récupère tous les commerces correspondant à un jeu de tags OpenStreetMap sur toute une région et en fait une liste de contacts.</p>
+        </div>
+      </div>
+
+      <dl class="specs">
+        <div><dt data-i18n="sp.type">Type</dt><dd data-i18n="p3.s1">Script d'extraction</dd></div>
+        <div><dt data-i18n="sp.source">Source</dt><dd>Overpass API</dd></div>
+        <div><dt data-i18n="sp.out">Sortie</dt><dd>CSV</dd></div>
+        <div><dt data-i18n="sp.client">Cas d'usage</dt><dd>NATKINA</dd></div>
+      </dl>
+
+      <div class="d-body">
+        <div class="d-prose">
+          <p data-i18n="p3.b1">OpenStreetMap n'est pas seulement une image de carte. Chaque commerce y porte des tags structurés qui disent de quel type d'activité il s'agit, avec les coordonnées que quelqu'un a bien voulu renseigner. Une bijouterie est taguée <code>shop=jewelry</code>, et on peut demander toutes celles d'une zone en une seule requête.</p>
+          <p data-i18n="p3.b2">Le script envoie cette requête, puis nettoie ce qui revient. Nom, adresse, site web, téléphone et coordonnées dans un seul tableur, doublons fusionnés, entrées sans aucun moyen de contact écartées.</p>
+
+          <div class="subhead"><span class="micro" data-i18n="p3.useTitle">Le cas d'usage</span><span class="rule"></span></div>
+          <p style="margin-top:1rem" data-i18n="p3.b3">J'écrivais de la prospection B2B à froid pour <strong>NATKINA</strong>, une marque de bijoux suisse, et il me fallait une liste de boutiques à approcher. Google Maps donne un écran à la fois et aucun export. Là, toute la région arrive dans un fichier en un seul passage, ce qui transforme une semaine de copier-coller en une après-midi.</p>
+        </div>
+
+        <div class="d-demo">
+          <div class="w-head">
+            <span class="micro" data-i18n="p3.demo">Extraction · schéma</span>
+            <span class="rule"></span>
+            <button class="w-act" id="osmRun" data-i18n="ui.run">Lancer</button>
+          </div>
+
+          <div class="osm-tabs" id="osmTabs">
+            <button class="osm-tab on" data-tag="shop=jewelry">shop=jewelry</button>
+            <button class="osm-tab" data-tag="shop=watches">shop=watches</button>
+            <button class="osm-tab" data-tag="shop=gift">shop=gift</button>
+          </div>
+
+          <div class="frame">
+            <div class="frame-bar">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="t" id="osmQuery">overpass · shop=jewelry</span>
+              <span class="r" id="osmCount">0 / 0</span>
+            </div>
+            <div class="osm">
+              <div class="osm-map" id="osmMap">
+                <svg viewBox="0 0 400 176" preserveAspectRatio="none" aria-hidden="true">
+                  <g id="osmGrid" stroke="var(--line-2)" stroke-width="1"></g>
+                  <g id="osmPins"></g>
+                </svg>
+                <div class="sweep" id="osmSweep"></div>
+              </div>
+              <div style="overflow-x:auto;padding:0 .6rem .6rem">
+                <table class="osm-tbl">
+                  <thead><tr><th>name</th><th>city</th><th>phone</th><th>website</th><th>lat/lon</th></tr></thead>
+                  <tbody id="osmRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <p class="caption" data-i18n="p3.caption">Schéma d'exécution. Les valeurs sont masquées : la sortie réelle est un CSV de contacts commerciaux.</p>
+        </div>
+      </div>
+
+      <div class="stackline">
+        <span class="micro" style="margin-right:.5rem" data-i18n="ui.stack">Pile</span>
+        <span class="tag">Python</span><span class="tag">Overpass API</span><span class="tag">requests</span><span class="tag">CSV</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ══════════ PILE ══════════ -->
+<section id="stack" class="section">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <span class="idx">03</span>
+      <h2 data-i18n="sec.stack">Pile technique</h2>
+      <span class="tail" data-i18n="sec.stackTail">13 composants</span>
+    </div>
+    <div class="stack-grid reveal" id="stackGrid"></div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" class="section">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <span class="idx">04</span>
+      <h2 data-i18n="sec.contact">Contact</h2>
+      <span class="tail" data-i18n="sec.contactTail">Canaux ouverts</span>
+    </div>
+
+    <div class="contact-grid">
+      <div class="reveal">
+        <p data-i18n="contact.body">Je cherche des places où l'on écrit du vrai code contre de vraies contraintes. Si l'un de ces dossiers recoupe ce sur quoi vous travaillez, le plus court chemin est un message direct.</p>
+        <p class="micro" style="margin-top:1.5rem" data-i18n="contact.hint">Réponse sous 24 h · FR / EN</p>
+      </div>
+
+      <!-- CONTACT-LINKS -->
+      <div class="reveal">
+        <a class="ch" href="mailto:anton.tkachuk@epfl.ch">
+          <span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="3.5" width="13" height="9" rx="1"/><path d="m1.5 4.5 6.5 4.5 6.5-4.5"/></svg></span>
+          <span class="tx"><span class="lb" data-i18n="ch.mail">E-mail</span><span class="vl">anton.tkachuk@epfl.ch</span></span>
+          <span class="go">↗</span>
+        </a>
+        <a class="ch" href="https://github.com/fre7co" target="_blank" rel="noopener">
+          <span class="ic"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 .8a7.2 7.2 0 0 0-2.28 14c.36.07.49-.15.49-.35v-1.2c-2 .44-2.43-.97-2.43-.97-.33-.83-.8-1.06-.8-1.06-.66-.45.05-.44.05-.44.73.05 1.11.75 1.11.75.65 1.11 1.7.79 2.11.6.07-.47.25-.79.46-.97-1.6-.18-3.28-.8-3.28-3.56 0-.79.28-1.43.74-1.93-.07-.18-.32-.91.07-1.9 0 0 .6-.19 1.98.74a6.9 6.9 0 0 1 3.6 0c1.37-.93 1.97-.74 1.97-.74.4.99.15 1.72.07 1.9.46.5.74 1.14.74 1.93 0 2.77-1.68 3.38-3.28 3.56.26.22.49.66.49 1.33v1.97c0 .2.13.42.49.35A7.2 7.2 0 0 0 8 .8Z"/></svg></span>
+          <span class="tx"><span class="lb">GitHub</span><span class="vl">github.com/fre7co</span></span>
+          <span class="go">↗</span>
+        </a>
+        <a class="ch" href="https://t.me/fre7co" target="_blank" rel="noopener">
+          <span class="ic"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M14.6 2.3 1.9 7.2c-.7.3-.7.7-.1.9l3.2 1 1.2 3.8c.15.4.27.56.55.56.28 0 .4-.13.55-.28l1.53-1.5 3.2 2.36c.58.32 1 .16 1.14-.54l2.06-9.7c.2-.86-.33-1.25-.9-1Z"/></svg></span>
+          <span class="tx"><span class="lb">Telegram</span><span class="vl">t.me/fre7co</span></span>
+          <span class="go">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="shell foot">
+    <span class="diamond"></span>
+    <span class="micro">ANTON TKACHUK · <span id="year">2026</span></span>
+    <span class="micro" id="skinNote"></span>
+    <span class="sp">
+      <button class="micro" id="btnHelp" style="cursor:pointer" data-i18n="foot.keys">Raccourcis</button>
+      <button class="micro" id="btnPrint" style="cursor:pointer" data-i18n="foot.print">Imprimer</button>
+    </span>
+  </div>
+</footer>
+
+</div><!-- /#page -->
+
+<!-- ══════════ PALETTE ══════════ -->
+<div class="overlay" id="palette" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="pal-in">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
+      <input id="palInput" type="text" autocomplete="off" spellcheck="false" data-i18n-ph="ui.searchPh" placeholder="Aller à, exécuter, basculer…">
+    </div>
+    <div class="pal-list" id="palList"></div>
+    <div class="pal-foot">
+      <span>↑↓ <span data-i18n="ui.navigate">naviguer</span></span>
+      <span>↵ <span data-i18n="ui.select">choisir</span></span>
+      <span>ESC <span data-i18n="ui.close">fermer</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ AIDE ══════════ -->
+<div class="overlay" id="help" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="w-head"><span class="micro" data-i18n="ui.keysTitle">Raccourcis clavier</span><span class="rule"></span></div>
+    <div class="keys">
+      <div><kbd>⌘</kbd><kbd>K</kbd><span class="d" data-i18n="k.pal">Palette de commandes</span></div>
+      <div><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><span class="d" data-i18n="k.skins">Habillage : Palantir, United24, Diia, Brave</span></div>
+      <div><kbd>S</kbd><span class="d" data-i18n="k.s">Habillage suivant</span></div>
+      <div><kbd>G</kbd><kbd>H</kbd><span class="d" data-i18n="k.h">Aller à l'identité</span></div>
+      <div><kbd>G</kbd><kbd>P</kbd><span class="d" data-i18n="k.p">Aller aux travaux</span></div>
+      <div><kbd>G</kbd><kbd>C</kbd><span class="d" data-i18n="k.c">Aller au contact</span></div>
+      <div><kbd>T</kbd><span class="d" data-i18n="k.t">Thème clair / sombre</span></div>
+      <div><kbd>L</kbd><span class="d" data-i18n="k.l">Langue FR / EN</span></div>
+      <div><kbd>C</kbd><span class="d" data-i18n="k.copy">Copier l'e-mail</span></div>
+      <div><kbd>?</kbd><span class="d" data-i18n="k.help">Cette fenêtre</span></div>
+      <div><kbd>ESC</kbd><span class="d" data-i18n="ui.close">Fermer</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><i></i><span id="toastMsg"></span></div>
+
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════════
+   HABILLAGES
+   ═══════════════════════════════════════════════════════════════ */
+const SKINS = {
+  palantir:{label:"Palantir", theme:"dark"},
+  u24:     {label:"United24", theme:"light"},
+  diia:    {label:"Diia",     theme:"light"},
+  brave:   {label:"Brave",    theme:"dark"}
+};
+const SKIN_ORDER = ["palantir","u24","diia","brave"];
+
+/* ═══════════════════════════════════════════════════════════════
+   I18N
+   ═══════════════════════════════════════════════════════════════ */
+const I18N = {
+fr:{
+"brand.sub":"Dossier",
+"nav.overview":"Aperçu","nav.projects":"Travaux","nav.stack":"Pile","nav.contact":"Contact",
+"rail.hero":"Identité","rail.overview":"Aperçu","rail.projects":"Travaux","rail.stack":"Pile","rail.contact":"Contact",
+"ui.search":"Rechercher","ui.searchPh":"Aller à, exécuter, basculer…","ui.searchAria":"Ouvrir la palette de commandes",
+"ui.langAria":"Passer en anglais","ui.themeAria":"Changer de thème","ui.skinAria":"Changer d'habillage",
+"ui.replay":"Rejouer","ui.shuffle":"Marché aléatoire","ui.run":"Lancer","ui.stack":"Pile",
+"ui.hard":"Ce qui a posé problème","ui.novideo":"Votre navigateur ne peut pas lire cette vidéo.",
+"ui.navigate":"naviguer","ui.select":"choisir","ui.close":"fermer","ui.keysTitle":"Raccourcis clavier",
+"ui.copied":"E-mail copié dans le presse-papiers","ui.themed":"Thème mis à jour","ui.langed":"Langue : français",
+"ui.skin":"Habillage","ui.skinSet":"Habillage : {v}",
+
+"skin.palantir":"Palantir — console d'exploitation : monochrome, angles vifs, étiquettes monospace, densité maximale.",
+"skin.u24":"United24 — éditorial de campagne : capitales massives, bloc jaune, bleu de liaison, bordures épaisses.",
+"skin.diia":"Diia — service public : blanc, cartes arrondies, air, aucune bordure inutile, ton posé.",
+"skin.brave":"Brave — dégradé orange-magenta, rondeurs, contraste élevé, mouvement souple.",
+
+"hero.eyebrow":"Dossier personnel · EPFL — Lausanne",
+"hero.role":"Apprenti développeur d'applications",
+"hero.lede1":"Je construis de petits outils qui vont chercher des données quelque part et en font quelque chose. Un terminal de trading qui vit dans une messagerie, un scanner qui surveille les marchés de prédiction à la recherche de prix qui ne s'additionnent plus, un script qui transforme des données cartographiques en liste de boutiques à contacter.",
+"hero.lede2":"En voici trois, chacun avec la partie qui a vraiment posé problème.",
+"hero.cta1":"Ouvrir les dossiers","hero.cta2":"Copier l'e-mail","hero.scroll":"Défiler",
+
+"card.title":"Fiche · 001","card.status":"Disponible",
+"card.k1":"Base","card.v1":"Lausanne, CH",
+"card.k2":"Formation","card.v2":"EPFL — apprentissage",
+"card.k3":"Domaine","card.v3":"Outils de données, automatisation",
+"card.k4":"Dossiers","card.v4":"3 actifs",
+"card.k5":"Langue","card.k6":"Contact",
+
+"sec.overview":"Aperçu","sec.overviewTail":"Chiffres & couverture","sec.matrix":"Matrice de capacités",
+"sec.projects":"Travaux","sec.projectsTail":"3 dossiers",
+"sec.stack":"Pile technique","sec.stackTail":"13 composants",
+"sec.contact":"Contact","sec.contactTail":"Canaux ouverts",
+
+"stat.1":"Outils livrés","stat.2":"Technologies employées","stat.3":"Écart réel détecté sur Polymarket","stat.4":"Dépendance dans cette page",
+
+"mx.head":"Domaine",
+"mx.r1":"Intégration d'API tierces","mx.r1s":"Jupiter, Helius, Gamma, CLOB, Overpass",
+"mx.r2":"Interfaces conversationnelles","mx.r2s":"aiogram 3, machines à états, claviers en ligne",
+"mx.r3":"Réseau asynchrone","mx.r3s":"asyncio, httpx, requêtes groupées",
+"mx.r4":"Gestion des cas d'échec","mx.r4s":"replis, valeurs par défaut sûres, diagnostic",
+"mx.r5":"Arithmétique exacte","mx.r5s":"entiers bruts, décimales, pas d'arrondi prématuré",
+"mx.r6":"Données géospatiales","mx.r6s":"Overpass QL, tags OSM, export CSV",
+"mx.r7":"Nettoyage et dédoublonnage","mx.r7s":"fusion d'entrées, filtres de complétude",
+
+"sp.type":"Type","sp.net":"Réseau","sp.exec":"Exécution","sp.state":"État","sp.live":"Fonctionnel",
+"sp.market":"Marché","sp.cadence":"Cadence","sp.source":"Source","sp.out":"Sortie","sp.client":"Cas d'usage",
+
+"p1.kicker":"Bot Telegram · Solana · exécution",
+"p1.title":"Un terminal de trading Solana dans Telegram",
+"p1.summary":"Connecter un portefeuille, puis acheter ou vendre n'importe quel token en collant son adresse de contrat. Sans navigateur, sans extension, sans quitter la conversation.",
+"p1.s1":"Bot Telegram",
+"p1.b1":"Une transaction complète tient en cinq touches. On colle une adresse, on saisit un montant, on lit ce qu'on va recevoir et ce qu'on recevra dans le pire des cas, on confirme. Le bot signe la transaction et renvoie un lien Solscan. La vente suit le même chemin, mais en pourcentage de ce qu'on détient.",
+"p1.b2":"L'essentiel du travail est parti dans les cas d'échec plutôt que dans le chemin nominal. Un bot de trading qui affiche un compteur puis meurt est pire qu'un bot qui refuse la transaction en disant pourquoi.",
+"p1.n1":"Les tokens récents n'apparaissent dans la liste de Jupiter qu'au bout de quelques heures, et sans le nombre de décimales on ne peut pas calculer un montant juste. Le bot lit alors le compte mint directement en RPC, puis retombe sur une valeur par défaut sûre. Un token sans nom se négocie quand même, on voit simplement une adresse tronquée à la place du ticker.",
+"p1.n2":"La vue portefeuille tient en un seul appel réseau, pas trente et un. Helius renvoie ensemble les soldes, les décimales et les prix en dollars, donc aucune requête de prix token par token.",
+"p1.n3":"La vente se fait en pourcentage, calculé sur le solde entier brut et non sur la valeur arrondie affichée. Les soldes de memecoins comptent douze chiffres. Les saisir à la main, c'est perdre de l'argent sur une faute de frappe, et arrondir avant le calcul laisse de la poussière sur une vente à 100&#160;%.",
+"p1.n4":"Trois options de la requête de swap font le vrai travail. <code>wrapAndUnwrapSol</code> évite à l'utilisateur d'avoir à savoir ce qu'est du SOL enveloppé. Des frais de priorité automatiques empêchent les transactions d'échouer en silence quand le réseau est chargé. Une limite de calcul dynamique laisse passer les routes à plusieurs sauts.",
+"p1.demo":"Démonstration · flux d'achat","p1.video":"Capture · session réelle",
+
+"p2.kicker":"Scanner · marchés de prédiction · alertes",
+"p2.title":"Un scanner d'arbitrage pour les marchés de prédiction",
+"p2.summary":"Passe en revue chaque marché à issues multiples de Polymarket une fois par minute et envoie une alerte Telegram quand les prix cessent de s'additionner.",
+"p2.s1":"Scanner + alertes","p2.s3":"60 s",
+"p2.b1":"Sur un marché à plusieurs issues, une seule se réalisera. La part gagnante rapporte un dollar, donc les prix Oui de toutes les issues devraient s'additionner à un dollar. Quand leur somme tombe en dessous, on peut acheter le lot complet et détenir un dollar garanti pour moins d'un dollar. L'écart est le bénéfice, et il ne dépend pas de qui gagne.",
+"p2.b2":"Le scanner récupère tous les marchés à issues multiples actifs, demande le prix médian de chaque issue en une seule requête groupée, en fait la somme, et alerte quand le total s'écarte suffisamment de un.",
+"p2.result":"Un passage en conditions réelles a trouvé <em>Balance of Power: 2026 Midterms</em> coté <b>1,85&#160;%</b> sous la parité, sur 22&#160;000&#160;$ de volume.",
+"p2.n1":"Le point d'accès aux prix groupés attend un tableau nu comme corps de requête, pas un objet qui l'enveloppe. Toutes les requêtes échouaient tant que je faisais confiance à la forme que j'avais supposée au lieu de lire ce que le serveur rejetait vraiment.",
+"p2.n2":"Les marchés sans carnet d'ordres bilatéral n'ont pas de prix médian du tout. Ceux-là passent par une seconde source. Sans ce repli, le scanner sautait en silence un tiers du tableau.",
+"p2.n3":"L'essentiel du débogage n'a pas porté sur la logique de détection mais sur la question : pourquoi n'a-t-il rien trouvé. D'où un script de diagnostic séparé qui affiche, marché par marché, quel filtre l'a écarté et pour quelle raison. Les devinettes sont devenues une liste.",
+"p2.demo":"Calculateur · déplacez les curseurs",
+"p2.caption":"Modèle interactif. Dans la réalité l'écart tourne entre un et trois pour cent et se referme en quelques minutes ; les frais et la profondeur du carnet le réduisent encore.",
+"mk.title":"Quelle équipe remporte le tournoi ?","mk.sub1":"4 issues","mk.sub2":"Clôture le 3 nov. 2026",
+"mk.cost":"Une part Oui sur chaque issue","mk.pay":"Ce que rapporte l'issue gagnante",
+"mk.hit":"Écart · +{v} ¢ acquis avant le coup d'envoi","mk.no":"Pas d'écart · le lot coûte {v} ¢ de trop","mk.par":"Parité · rien à prendre",
+"mk.team":"Équipe ",
+
+"p3.kicker":"Extraction · OpenStreetMap · prospection",
+"p3.title":"Trouver des boutiques par leurs tags cartographiques",
+"p3.summary":"Récupère tous les commerces correspondant à un jeu de tags OpenStreetMap sur toute une région et en fait une liste de contacts.",
+"p3.s1":"Script d'extraction",
+"p3.b1":"OpenStreetMap n'est pas seulement une image de carte. Chaque commerce y porte des tags structurés qui disent de quel type d'activité il s'agit, avec les coordonnées que quelqu'un a bien voulu renseigner. Une bijouterie est taguée <code>shop=jewelry</code>, et on peut demander toutes celles d'une zone en une seule requête.",
+"p3.b2":"Le script envoie cette requête, puis nettoie ce qui revient. Nom, adresse, site web, téléphone et coordonnées dans un seul tableur, doublons fusionnés, entrées sans aucun moyen de contact écartées.",
+"p3.useTitle":"Le cas d'usage",
+"p3.b3":"J'écrivais de la prospection B2B à froid pour <strong>NATKINA</strong>, une marque de bijoux suisse, et il me fallait une liste de boutiques à approcher. Google Maps donne un écran à la fois et aucun export. Là, toute la région arrive dans un fichier en un seul passage, ce qui transforme une semaine de copier-coller en une après-midi.",
+"p3.demo":"Extraction · schéma",
+"p3.caption":"Schéma d'exécution. Les valeurs sont masquées : la sortie réelle est un CSV de contacts commerciaux.",
+
+"contact.body":"Je cherche des places où l'on écrit du vrai code contre de vraies contraintes. Si l'un de ces dossiers recoupe ce sur quoi vous travaillez, le plus court chemin est un message direct.",
+"contact.hint":"Réponse sous 24 h · FR / EN","ch.mail":"E-mail",
+
+"foot.keys":"Raccourcis","foot.print":"Imprimer",
+
+"k.pal":"Palette de commandes","k.h":"Aller à l'identité","k.p":"Aller aux travaux","k.c":"Aller au contact",
+"k.t":"Thème clair / sombre","k.l":"Langue FR / EN","k.copy":"Copier l'e-mail","k.help":"Cette fenêtre",
+"k.skins":"Habillage : Palantir, United24, Diia, Brave","k.s":"Habillage suivant"
+},
+en:{
+"brand.sub":"Dossier",
+"nav.overview":"Overview","nav.projects":"Work","nav.stack":"Stack","nav.contact":"Contact",
+"rail.hero":"Identity","rail.overview":"Overview","rail.projects":"Work","rail.stack":"Stack","rail.contact":"Contact",
+"ui.search":"Search","ui.searchPh":"Jump to, run, toggle…","ui.searchAria":"Open command palette",
+"ui.langAria":"Switch to French","ui.themeAria":"Toggle theme","ui.skinAria":"Change skin",
+"ui.replay":"Replay","ui.shuffle":"Random market","ui.run":"Run","ui.stack":"Stack",
+"ui.hard":"What actually broke","ui.novideo":"Your browser cannot play this video.",
+"ui.navigate":"navigate","ui.select":"select","ui.close":"close","ui.keysTitle":"Keyboard shortcuts",
+"ui.copied":"Email copied to clipboard","ui.themed":"Theme updated","ui.langed":"Language: English",
+"ui.skin":"Skin","ui.skinSet":"Skin: {v}",
+
+"skin.palantir":"Palantir — operations console: monochrome, hard corners, monospace labels, maximum density.",
+"skin.u24":"United24 — campaign editorial: massive capitals, yellow block, linking blue, heavy rules.",
+"skin.diia":"Diia — public service: white, rounded cards, air, no border it can do without, calm voice.",
+"skin.brave":"Brave — orange-to-magenta gradient, soft radii, high contrast, fluid motion.",
+
+"hero.eyebrow":"Personal dossier · EPFL — Lausanne",
+"hero.role":"Application developer apprentice",
+"hero.lede1":"I build small tools that go and fetch data from somewhere and do something with it. A trading terminal that lives inside a messenger, a scanner that watches prediction markets for prices that stop adding up, a script that turns map data into a list of shops to contact.",
+"hero.lede2":"Here are three of them, each with the part that genuinely gave trouble.",
+"hero.cta1":"Open the dossiers","hero.cta2":"Copy email","hero.scroll":"Scroll",
+
+"card.title":"Record · 001","card.status":"Available",
+"card.k1":"Base","card.v1":"Lausanne, CH",
+"card.k2":"Training","card.v2":"EPFL — apprenticeship",
+"card.k3":"Field","card.v3":"Data tooling, automation",
+"card.k4":"Dossiers","card.v4":"3 active",
+"card.k5":"Language","card.k6":"Contact",
+
+"sec.overview":"Overview","sec.overviewTail":"Figures & coverage","sec.matrix":"Capability matrix",
+"sec.projects":"Work","sec.projectsTail":"3 dossiers",
+"sec.stack":"Technical stack","sec.stackTail":"13 components",
+"sec.contact":"Contact","sec.contactTail":"Open channels",
+
+"stat.1":"Tools shipped","stat.2":"Technologies used","stat.3":"Real edge found on Polymarket","stat.4":"Dependencies on this page",
+
+"mx.head":"Domain",
+"mx.r1":"Third-party API integration","mx.r1s":"Jupiter, Helius, Gamma, CLOB, Overpass",
+"mx.r2":"Conversational interfaces","mx.r2s":"aiogram 3, state machines, inline keyboards",
+"mx.r3":"Async networking","mx.r3s":"asyncio, httpx, batched requests",
+"mx.r4":"Failure-path handling","mx.r4s":"fallbacks, safe defaults, diagnostics",
+"mx.r5":"Exact arithmetic","mx.r5s":"raw integers, decimals, no early rounding",
+"mx.r6":"Geospatial data","mx.r6s":"Overpass QL, OSM tags, CSV export",
+"mx.r7":"Cleaning and deduplication","mx.r7s":"record merging, completeness filters",
+
+"sp.type":"Type","sp.net":"Network","sp.exec":"Execution","sp.state":"State","sp.live":"Working",
+"sp.market":"Market","sp.cadence":"Cadence","sp.source":"Source","sp.out":"Output","sp.client":"Use case",
+
+"p1.kicker":"Telegram bot · Solana · execution",
+"p1.title":"A Solana trading terminal inside Telegram",
+"p1.summary":"Connect a wallet, then buy or sell any token by pasting its contract address. No browser, no extension, without leaving the chat.",
+"p1.s1":"Telegram bot",
+"p1.b1":"A complete trade takes five taps. You paste an address, enter an amount, read what you will receive and what you will receive in the worst case, and confirm. The bot signs the transaction and returns a Solscan link. Selling follows the same path, but as a percentage of what you hold.",
+"p1.b2":"Most of the work went into the failure paths rather than the happy path. A trading bot that shows a spinner and then dies is worse than one that refuses the trade and says why.",
+"p1.n1":"Recent tokens only show up in Jupiter's list after a few hours, and without the decimal count you cannot compute a correct amount. So the bot reads the mint account directly over RPC, then falls back to a safe default. A token with no name still trades — you just see a truncated address instead of a ticker.",
+"p1.n2":"The wallet view is one network call, not thirty-one. Helius returns balances, decimals and dollar prices together, so there is no per-token price request.",
+"p1.n3":"Selling is done by percentage, computed on the raw integer balance rather than the rounded value on screen. Memecoin balances run to twelve digits. Typing them by hand loses money to a typo, and rounding before the maths leaves dust behind on a 100% sale.",
+"p1.n4":"Three options on the swap request do the real work. <code>wrapAndUnwrapSol</code> spares the user from ever needing to know what wrapped SOL is. Automatic priority fees stop transactions from failing silently when the network is busy. A dynamic compute limit lets multi-hop routes through.",
+"p1.demo":"Demo · buy flow","p1.video":"Capture · real session",
+
+"p2.kicker":"Scanner · prediction markets · alerts",
+"p2.title":"An arbitrage scanner for prediction markets",
+"p2.summary":"Sweeps every multi-outcome Polymarket market once a minute and fires a Telegram alert when the prices stop adding up.",
+"p2.s1":"Scanner + alerts","p2.s3":"60 s",
+"p2.b1":"On a multi-outcome market, exactly one outcome resolves. The winning share pays a dollar, so the Yes prices across all outcomes should sum to a dollar. When the sum falls below that, you can buy the full set and hold a guaranteed dollar for less than a dollar. The gap is the profit, and it does not depend on who wins.",
+"p2.b2":"The scanner pulls every active multi-outcome market, asks for each outcome's midpoint price in a single batched request, sums them, and alerts when the total drifts far enough from one.",
+"p2.result":"A live run found <em>Balance of Power: 2026 Midterms</em> priced <b>1.85%</b> under parity, on $22,000 of volume.",
+"p2.n1":"The batched price endpoint expects a bare array as the request body, not an object wrapping it. Every request failed as long as I trusted the shape I had assumed instead of reading what the server was actually rejecting.",
+"p2.n2":"Markets without a two-sided order book have no midpoint price at all. Those go through a second source. Without that fallback, the scanner silently skipped a third of the board.",
+"p2.n3":"Most of the debugging was not about the detection logic but about the question: why did it find nothing. Hence a separate diagnostic script that prints, market by market, which filter dropped it and why. Guesswork became a list.",
+"p2.demo":"Calculator · drag the sliders",
+"p2.caption":"Interactive model. In reality the gap runs between one and three percent and closes within minutes; fees and order-book depth shrink it further.",
+"mk.title":"Which team wins the tournament?","mk.sub1":"4 outcomes","mk.sub2":"Closes 3 Nov 2026",
+"mk.cost":"One Yes share on each outcome","mk.pay":"What the winning outcome pays",
+"mk.hit":"Edge · +{v} ¢ locked before kickoff","mk.no":"No edge · the set costs {v} ¢ too much","mk.par":"Parity · nothing to take",
+"mk.team":"Team ",
+
+"p3.kicker":"Extraction · OpenStreetMap · prospecting",
+"p3.title":"Finding shops by their map tags",
+"p3.summary":"Pulls every business matching a set of OpenStreetMap tags across a whole region and turns it into a contact list.",
+"p3.s1":"Extraction script",
+"p3.b1":"OpenStreetMap is not just a picture of a map. Every business carries structured tags saying what kind of trade it is, along with whatever contact details someone bothered to fill in. A jeweller is tagged <code>shop=jewelry</code>, and you can ask for every one in an area in a single query.",
+"p3.b2":"The script sends that query, then cleans what comes back. Name, address, website, phone and coordinates in one spreadsheet, duplicates merged, entries with no way to reach them dropped.",
+"p3.useTitle":"The use case",
+"p3.b3":"I was writing cold B2B outreach for <strong>NATKINA</strong>, a Swiss jewellery brand, and needed a list of shops to approach. Google Maps gives you one screen at a time and no export. Here the whole region lands in one file in a single pass, which turns a week of copy-pasting into an afternoon.",
+"p3.demo":"Extraction · schematic",
+"p3.caption":"Execution schematic. Values are masked: the real output is a CSV of business contacts.",
+
+"contact.body":"I am looking for places where real code is written against real constraints. If one of these dossiers overlaps what you are working on, the shortest path is a direct message.",
+"contact.hint":"Reply within 24 h · FR / EN","ch.mail":"Email",
+
+"foot.keys":"Shortcuts","foot.print":"Print",
+
+"k.pal":"Command palette","k.h":"Go to identity","k.p":"Go to work","k.c":"Go to contact",
+"k.t":"Light / dark theme","k.l":"Language FR / EN","k.copy":"Copy email","k.help":"This window",
+"k.skins":"Skin: Palantir, United24, Diia, Brave","k.s":"Next skin"
+}
+};
+
+const EMAIL = "anton.tkachuk@epfl.ch";
+const $  = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.prototype.slice.call((r||document).querySelectorAll(s));
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let lang = localStorage.getItem("tk.lang") === "en" ? "en" : "fr";
+let skin = document.documentElement.getAttribute("data-skin") || "palantir";
+const t = k => (I18N[lang] && I18N[lang][k]) || I18N.fr[k] || k;
+
+/* ═══════════ Habillage ═══════════ */
+function applySkin(s, opts){
+  if(!SKINS[s]) s = "palantir";
+  const changed = s !== skin;
+  skin = s;
+  document.documentElement.setAttribute("data-skin", skin);
+  try{ localStorage.setItem("tk.skin", skin); }catch(e){}
+
+  const stored = (function(){ try{ return localStorage.getItem("tk.theme." + skin); }catch(e){ return null; } })();
+  applyTheme(stored || SKINS[skin].theme, true);
+
+  $$("#skins button").forEach(b=> b.classList.toggle("on", b.dataset.skinBtn === skin));
+  $("#skinCycleLabel").textContent = SKINS[skin].label;
+  $("#skinNote").textContent = t("skin." + skin);
+
+  try{
+    const u = new URL(location.href);
+    u.searchParams.set("skin", skin);
+    history.replaceState(null, "", u);
+  }catch(e){}
+
+  if(changed && !REDUCED && !(opts && opts.silent)){
+    const f = $("#flash");
+    f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
+  }
+  if(!(opts && opts.silent)) toast(t("ui.skinSet").replace("{v}", SKINS[skin].label));
+  buildPalette();
+}
+function cycleSkin(dir){
+  const i = SKIN_ORDER.indexOf(skin);
+  applySkin(SKIN_ORDER[(i + (dir||1) + SKIN_ORDER.length) % SKIN_ORDER.length]);
+}
+
+/* ═══════════ Thème ═══════════ */
+function applyTheme(th, quiet){
+  th = th === "light" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", th);
+  try{ localStorage.setItem("tk.theme." + skin, th); }catch(e){}
+  $("#icoTheme").innerHTML = th === "dark"
+    ? '<circle cx="8" cy="8" r="3.2"/><path d="M8 1v1.6M8 13.4V15M15 8h-1.6M2.6 8H1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1M12.9 12.9l-1.1-1.1M4.2 4.2 3.1 3.1"/>'
+    : '<path d="M13.6 9.6A6 6 0 0 1 6.4 2.4a6 6 0 1 0 7.2 7.2Z"/>';
+  netRefresh();
+  if(!quiet) toast(t("ui.themed"));
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+}
+
+/* ═══════════ Langue ═══════════ */
+function applyLang(l, quiet){
+  lang = (l === "en") ? "en" : "fr";
+  try{ localStorage.setItem("tk.lang", lang); }catch(e){}
+  document.documentElement.lang = lang;
+  $$("[data-i18n]").forEach(el=>{ const v = I18N[lang][el.dataset.i18n]; if(v != null) el.innerHTML = v; });
+  $$("[data-i18n-ph]").forEach(el=>{ const v = I18N[lang][el.dataset.i18nPh]; if(v != null) el.placeholder = v; });
+  $$("[data-i18n-aria]").forEach(el=>{ const v = I18N[lang][el.dataset.i18nAria]; if(v != null) el.setAttribute("aria-label", v); });
+  $("#langLabel").textContent = lang === "fr" ? "EN" : "FR";
+  $("#skinNote").textContent = t("skin." + skin);
+  buildStack();
+  buildPalette();
+  renderMarket();
+  resetTelegram();
+  if(!quiet) toast(t("ui.langed"));
+}
+
+/* ═══════════ Toast ═══════════ */
+let toastTimer;
+function toast(msg){
+  $("#toastMsg").textContent = msg;
+  $("#toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> $("#toast").classList.remove("show"), 2600);
+}
+
+/* ═══════════ Copie e-mail ═══════════ */
+function copyEmail(){
+  const done = ()=> toast(t("ui.copied"));
+  function fallback(){
+    const ta = document.createElement("textarea");
+    ta.value = EMAIL; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(EMAIL).then(done).catch(fallback);
+  } else fallback();
+}
+
+/* ═══════════ Démarrage ═══════════ */
+function boot(){
+  const lines = [
+    ["init runtime","ok"],
+    ["skin/" + skin, SKINS[skin].label.toLowerCase()],
+    ["load dossier/001","ok"],["load dossier/002","ok"],["load dossier/003","ok"],
+    ["index capabilities","7"],["render","ok"]
+  ];
+  const log = $("#bootLog");
+  const finish = ()=>{
+    const b = $("#boot"); if(!b) return;
+    b.classList.add("done");
+    setTimeout(()=>{ if(b.parentNode) b.parentNode.removeChild(b); }, 700);
+  };
+  if(REDUCED){ finish(); return; }
+  lines.forEach((l,i)=>{
+    const d = document.createElement("div");
+    d.style.animationDelay = (i*0.15) + "s";
+    d.innerHTML = "<span>" + l[0] + "</span><b>" + l[1] + "</b>";
+    log.appendChild(d);
+  });
+  setTimeout(finish, 1650);
+}
+
+/* ═══════════ Horloge ═══════════ */
+function tick(){
+  const d = new Date(), p = n => String(n).padStart(2,"0");
+  $("#clockTime").textContent = p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + ":" + p(d.getUTCSeconds());
+}
+
+/* ═══════════ Défilement ═══════════ */
+const SECTIONS = ["hero","overview","projects","stack","contact"];
+function onScroll(){
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  $("#progress").style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  $("#railTop").classList.toggle("show", h.scrollTop > 600);
+
+  let cur = SECTIONS[0];
+  const mid = h.scrollTop + window.innerHeight * 0.35;
+  SECTIONS.forEach(id=>{ const el = document.getElementById(id); if(el && el.offsetTop <= mid) cur = id; });
+  $$("#rail .rail-tick").forEach(a=> a.classList.toggle("on", a.dataset.sec === cur));
+  $$("#navlinks a").forEach(a=> a.classList.toggle("on", a.getAttribute("href") === "#" + cur));
+}
+
+/* ═══════════ Apparition + compteurs ═══════════ */
+function fmtCount(el){
+  const target = parseFloat(el.dataset.count), div = parseFloat(el.dataset.div || "1");
+  const suf = el.dataset.suf ? '<span class="suf">' + el.dataset.suf + "</span>" : "";
+  const v = target / div;
+  return (div === 1 ? String(v) : (lang === "fr" ? v.toFixed(2).replace(".",",") : v.toFixed(2))) + suf;
+}
+function countUp(el){
+  const target = parseFloat(el.dataset.count), div = parseFloat(el.dataset.div || "1");
+  const suf = el.dataset.suf ? '<span class="suf">' + el.dataset.suf + "</span>" : "";
+  if(REDUCED || target === 0){ el.innerHTML = fmtCount(el); return; }
+  const dur = 1100, t0 = performance.now();
+  (function step(now){
+    const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3), v = (target * e) / div;
+    el.innerHTML = (div === 1 ? Math.round(v) : (lang === "fr" ? v.toFixed(2).replace(".",",") : v.toFixed(2))) + suf;
+    if(p < 1) requestAnimationFrame(step); else el.innerHTML = fmtCount(el);
+  })(t0);
+}
+function observe(){
+  if(!("IntersectionObserver" in window)){
+    $$(".reveal").forEach(e=> e.classList.add("in"));
+    $$("[data-count]").forEach(e=>{ e.innerHTML = fmtCount(e); });
+    $$(".stat").forEach(e=> e.classList.add("in"));
+    return;
+  }
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting) return;
+      e.target.classList.add("in");
+      io.unobserve(e.target);
+      if(e.target.id === "stats"){
+        $$(".stat", e.target).forEach((s,i)=> setTimeout(()=> s.classList.add("in"), i*90));
+        $$("[data-count]", e.target).forEach((n,i)=> setTimeout(()=> countUp(n), i*90));
+      }
+    });
+  },{threshold:.18, rootMargin:"0px 0px -8% 0px"});
+  $$(".reveal").forEach(e=> io.observe(e));
+}
+
+/* ═══════════ Réseau animé (héros) ═══════════
+   Les couleurs sont lues une seule fois par changement d'habillage,
+   jamais dans la boucle de rendu. */
+const NET = {col:"#4C90F0", link:.2, node:.45};
+function netRefresh(){
+  const cs = getComputedStyle(document.documentElement);
+  NET.col  = cs.getPropertyValue("--hot").trim() || "#4C90F0";
+  NET.link = parseFloat(cs.getPropertyValue("--net-link")) || .2;
+  NET.node = parseFloat(cs.getPropertyValue("--net-node")) || .45;
+  const c = document.getElementById("net");
+  if(c) c.style.opacity = cs.getPropertyValue("--net-alpha").trim() || ".5";
+}
+function network(){
+  const c = $("#net"); if(!c) return;
+  const ctx = c.getContext("2d");
+  let w = 0, h = 0, dpr = 1, nodes = [], raf = null;
+  const mouse = {x:-9999, y:-9999};
+
+  function size(){
+    const r = c.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = r.width; h = r.height;
+    c.width = Math.round(w*dpr); c.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const count = Math.max(26, Math.min(72, Math.round(w*h/16000)));
+    nodes = [];
+    for(let i=0;i<count;i++)
+      nodes.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5)*.16, vy:(Math.random()-.5)*.16, r:Math.random()*1.4+.7});
+  }
+  function draw(){
+    const col = NET.col, aLink = NET.link, aNode = NET.node;
+
+    ctx.clearRect(0,0,w,h);
+    for(let i=0;i<nodes.length;i++){
+      const n = nodes[i];
+      n.x += n.vx; n.y += n.vy;
+      if(n.x < 0 || n.x > w) n.vx *= -1;
+      if(n.y < 0 || n.y > h) n.vy *= -1;
+      const dx = n.x - mouse.x, dy = n.y - mouse.y, d = Math.hypot(dx,dy);
+      if(d < 110 && d > .1){ n.x += (dx/d)*.7; n.y += (dy/d)*.7; }
+    }
+    ctx.lineWidth = 1; ctx.strokeStyle = col;
+    for(let i=0;i<nodes.length;i++)
+      for(let j=i+1;j<nodes.length;j++){
+        const a = nodes[i], b = nodes[j], d = Math.hypot(a.x-b.x, a.y-b.y);
+        if(d < 132){
+          ctx.globalAlpha = (1 - d/132) * aLink;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    ctx.fillStyle = col;
+    nodes.forEach(n=>{
+      ctx.globalAlpha = Math.hypot(n.x-mouse.x, n.y-mouse.y) < 130 ? Math.min(1, aNode*1.9) : aNode;
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    raf = requestAnimationFrame(draw);
+  }
+
+  size();
+  window.addEventListener("resize", size, {passive:true});
+  $("#hero").addEventListener("mousemove", e=>{
+    const r = c.getBoundingClientRect();
+    mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+  }, {passive:true});
+  $("#hero").addEventListener("mouseleave", ()=>{ mouse.x = -9999; mouse.y = -9999; });
+
+  draw();
+  if(REDUCED){ cancelAnimationFrame(raf); raf = null; return; }
+  document.addEventListener("visibilitychange", ()=>{
+    if(document.hidden){ cancelAnimationFrame(raf); raf = null; }
+    else if(!raf) raf = requestAnimationFrame(draw);
+  });
+}
+
+/* ═══════════ 001 · Simulateur Telegram ═══════════ */
+const TG = {
+  fr:[
+    {k:"sys", x:"Session ouverte · portefeuille connecté"},
+    {k:"bot", x:"<b>Terminal</b>\nSolde : <span class=\"g\">4,182 SOL</span> · 612,40 $\nCollez une adresse de contrat pour commencer."},
+    {k:"me",  x:"7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr"},
+    {k:"bot", x:"<b>POPCAT</b> · <span class=\"a\">décimales 9</span>\nPrix 0,7412 $ · liquidité <span class=\"g\">OK</span>\nMontant à dépenser ?"},
+    {k:"me",  x:"0.5 SOL"},
+    {k:"bot", x:"Devis Jupiter v6 · 2 sauts\nVous recevez ≈ <b>98,74 POPCAT</b>\nPire cas (slippage 1 %) : <span class=\"o\">97,75</span>\nFrais de priorité : auto"},
+    {k:"me",  x:"✅ Confirmer"},
+    {k:"ok",  x:"<b>Transaction confirmée</b>\n98,74 POPCAT reçus\n<span class=\"a\">solscan.io/tx/5nQ…8Kb</span>"}
+  ],
+  en:[
+    {k:"sys", x:"Session open · wallet connected"},
+    {k:"bot", x:"<b>Terminal</b>\nBalance: <span class=\"g\">4.182 SOL</span> · $612.40\nPaste a contract address to begin."},
+    {k:"me",  x:"7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr"},
+    {k:"bot", x:"<b>POPCAT</b> · <span class=\"a\">decimals 9</span>\nPrice $0.7412 · liquidity <span class=\"g\">OK</span>\nAmount to spend?"},
+    {k:"me",  x:"0.5 SOL"},
+    {k:"bot", x:"Jupiter v6 quote · 2 hops\nYou receive ≈ <b>98.74 POPCAT</b>\nWorst case (1% slippage): <span class=\"o\">97.75</span>\nPriority fee: auto"},
+    {k:"me",  x:"✅ Confirm"},
+    {k:"ok",  x:"<b>Transaction confirmed</b>\n98.74 POPCAT received\n<span class=\"a\">solscan.io/tx/5nQ…8Kb</span>"}
+  ]
+};
+const TGKEYS = {
+  fr:[["Acheter",1],["Vendre",0],["Portefeuille",0],["Positions",0],["Retrait",0]],
+  en:[["Buy",1],["Sell",0],["Wallet",0],["Positions",0],["Withdraw",0]]
+};
+let tgTimer = null, tgStarted = false;
+
+function resetTelegram(){
+  clearTimeout(tgTimer);
+  $("#tgFeed").innerHTML = "";
+  const keys = $("#tgKeys");
+  keys.innerHTML = "";
+  TGKEYS[lang].forEach(k=>{
+    const b = document.createElement("span");
+    b.className = "tg-key" + (k[1] ? " hot" : "");
+    b.textContent = k[0];
+    keys.appendChild(b);
+  });
+  $("#tgStep").textContent = "00/" + String(TG[lang].length).padStart(2,"0");
+  if(tgStarted) playTelegram();
+}
+function playTelegram(){
+  clearTimeout(tgTimer);
+  const feed = $("#tgFeed");
+  feed.innerHTML = "";
+  const seq = TG[lang];
+  let i = 0;
+  (function next(){
+    if(i >= seq.length) return;
+    const m = seq[i];
+    const d = document.createElement("div");
+    d.className = "tg-msg " + (m.k === "me" ? "me" : m.k === "sys" ? "sys" : m.k === "ok" ? "ok" : "");
+    d.innerHTML = m.x;
+    feed.appendChild(d);
+    while(feed.scrollHeight > feed.clientHeight && feed.firstChild) feed.removeChild(feed.firstChild);
+    i++;
+    $("#tgStep").textContent = String(i).padStart(2,"0") + "/" + String(seq.length).padStart(2,"0");
+    if(i < seq.length) tgTimer = setTimeout(next, REDUCED ? 220 : (seq[i].k === "me" ? 950 : 1250));
+  })();
+}
+
+/* ═══════════ 002 · Calculateur d'arbitrage ═══════════ */
+const MK_TEAMS = ["A","B","C","D"];
+let mkPrices = [40,31,15,8];
+
+function renderMarket(){
+  const wrap = $("#mkOuts");
+  wrap.innerHTML = "";
+  mkPrices.forEach((p,i)=>{
+    const row = document.createElement("div");
+    row.className = "out";
+    row.innerHTML =
+      '<span class="av">' + MK_TEAMS[i] + "</span>" +
+      '<span class="nm">' + t("mk.team") + MK_TEAMS[i] + "</span>" +
+      '<span class="pc" id="mkp' + i + '">' + p + " ¢</span>" +
+      '<span class="out-slider"><input type="range" min="1" max="97" value="' + p + '" data-i="' + i + '" aria-label="' + t("mk.team") + MK_TEAMS[i] + '"></span>';
+    wrap.appendChild(row);
+  });
+  $$("#mkOuts input[type=range]").forEach(r=>{
+    r.addEventListener("input", e=>{
+      mkPrices[+e.target.dataset.i] = +e.target.value;
+      $("#mkp" + e.target.dataset.i).textContent = e.target.value + " ¢";
+      computeMarket();
+    });
+  });
+  computeMarket();
+}
+function computeMarket(){
+  const sum = mkPrices.reduce((a,b)=> a+b, 0), edge = 100 - sum;
+  $("#mkCost").textContent = sum + " ¢";
+  const bar = $("#mkBar");
+  bar.style.width = Math.min(100, sum) + "%";
+  bar.style.background = sum < 100 ? "var(--signal)" : sum > 100 ? "var(--warn)" : "var(--hot)";
+  const v = $("#mkVerdict");
+  v.classList.remove("hit","no");
+  if(edge > 0){ v.classList.add("hit"); v.textContent = t("mk.hit").replace("{v}", edge); }
+  else if(edge < 0){ v.classList.add("no"); v.textContent = t("mk.no").replace("{v}", Math.abs(edge)); }
+  else v.textContent = t("mk.par");
+}
+function shuffleMarket(){
+  const target = 93 + Math.floor(Math.random()*12);
+  const raw = [0,0,0,0].map(()=> Math.random() + .12);
+  const s = raw.reduce((a,b)=> a+b, 0);
+  const p = raw.map(x=> Math.max(2, Math.round(x/s*target)));
+  p[0] = Math.max(2, p[0] + (target - p.reduce((a,b)=> a+b, 0)));
+  mkPrices = p;
+  $("#mkVol").textContent = "VOL " + (8 + Math.floor(Math.random()*60)) + " " + String(100 + Math.floor(Math.random()*899)) + " $";
+  renderMarket();
+}
+
+/* ═══════════ 003 · Extraction OSM ═══════════ */
+const OSM_CITIES = ["Genève","Lausanne","Montreux","Nyon","Vevey","Morges","Sion","Neuchâtel","Fribourg","Bulle"];
+let osmTag = "shop=jewelry", osmBusy = false;
+
+function osmGrid(){
+  let s = "";
+  for(let x=40;x<400;x+=40) s += '<line x1="'+x+'" y1="0" x2="'+x+'" y2="176"/>';
+  for(let y=29;y<176;y+=29) s += '<line x1="0" y1="'+y+'" x2="400" y2="'+y+'"/>';
+  $("#osmGrid").innerHTML = s;
+}
+const rnd = n => Math.floor(Math.random()*n);
+function osmRun(){
+  if(osmBusy) return;
+  osmBusy = true;
+  $("#osmQuery").textContent = "overpass · " + osmTag;
+  const sweep = $("#osmSweep");
+  sweep.classList.remove("run"); void sweep.offsetWidth; sweep.classList.add("run");
+
+  const total = 14 + rnd(10);
+  const pins = $("#osmPins"), rows = $("#osmRows");
+  pins.innerHTML = ""; rows.innerHTML = "";
+  $("#osmCount").textContent = "0 / " + total;
+
+  let shown = 0;
+  const stepMs = REDUCED ? 0 : 110;
+
+  for(let i=0;i<total;i++){
+    const cx = 18 + Math.random()*364, cy = 14 + Math.random()*148;
+    const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx", cx.toFixed(1)); c.setAttribute("cy", cy.toFixed(1));
+    c.setAttribute("r","3.2"); c.setAttribute("fill","var(--hot)"); c.setAttribute("class","osm-pin");
+    pins.appendChild(c);
+
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      '<td><span class="redact" style="width:' + (46+rnd(38)) + 'px"></span></td>' +
+      "<td>" + OSM_CITIES[rnd(OSM_CITIES.length)] + "</td>" +
+      '<td><span class="redact" style="width:' + (38+rnd(18)) + 'px"></span></td>' +
+      '<td><span class="redact" style="width:' + (30+rnd(34)) + 'px"></span></td>' +
+      "<td>" + (46.2 + Math.random()*.9).toFixed(3) + ", " + (6.1 + Math.random()*1.4).toFixed(3) + "</td>";
+    rows.appendChild(tr);
+
+    setTimeout(()=>{
+      c.classList.add("on");
+      if(i < 9) tr.classList.add("on"); else tr.style.display = "none";
+      shown++;
+      $("#osmCount").textContent = shown + " / " + total;
+      if(shown === total) osmBusy = false;
+    }, i*stepMs + (REDUCED ? 0 : 180));
+  }
+  if(REDUCED) osmBusy = false;
+}
+
+/* ═══════════ Pile technique ═══════════ */
+const STACK = [
+  {n:"Python",               fr:"Langage commun aux trois dossiers",             en:"Common language across all three dossiers"},
+  {n:"aiogram 3",            fr:"Bots Telegram, machines à états, claviers",     en:"Telegram bots, state machines, keyboards"},
+  {n:"asyncio",              fr:"Boucles de scan concurrentes",                  en:"Concurrent scan loops"},
+  {n:"httpx",                fr:"Client HTTP asynchrone",                        en:"Async HTTP client"},
+  {n:"requests",             fr:"Appels synchrones du script d'extraction",      en:"Sync calls in the extraction script"},
+  {n:"Jupiter Aggregator v6",fr:"Routage et exécution des swaps Solana",         en:"Solana swap routing and execution"},
+  {n:"Helius RPC",           fr:"Comptes mint, décimales, envoi de transaction", en:"Mint accounts, decimals, transaction send"},
+  {n:"Helius DAS",           fr:"Portefeuille complet en un seul appel",         en:"Whole wallet in a single call"},
+  {n:"solders",              fr:"Signature et sérialisation des transactions",   en:"Transaction signing and serialisation"},
+  {n:"API Gamma",            fr:"Catalogue des marchés Polymarket",              en:"Polymarket market catalogue"},
+  {n:"API CLOB",             fr:"Prix médians groupés, repli carnet",            en:"Batched midpoints, order-book fallback"},
+  {n:"Overpass API",         fr:"Requêtes de tags OpenStreetMap",                en:"OpenStreetMap tag queries"},
+  {n:"loguru",               fr:"Journal de diagnostic marché par marché",       en:"Market-by-market diagnostic log"}
+];
+function buildStack(){
+  const g = $("#stackGrid");
+  g.innerHTML = "";
+  STACK.forEach((s,i)=>{
+    const d = document.createElement("div");
+    d.className = "stack-item";
+    d.innerHTML = '<span class="ix">' + String(i+1).padStart(2,"0") + "</span>" +
+                  '<div class="nm">' + s.n + '</div><div class="rl">' + s[lang] + "</div>";
+    g.appendChild(d);
+  });
+}
+
+/* ═══════════ Palette de commandes ═══════════ */
+let PAL = [], palSel = 0, palFiltered = [];
+function buildPalette(){
+  const GO  = lang === "fr" ? "Aller"  : "Go";
+  const RUN = lang === "fr" ? "Action" : "Run";
+  const LNK = lang === "fr" ? "Lien"   : "Link";
+  const SK  = t("ui.skin");
+
+  PAL = SKIN_ORDER.map((s,i)=>({
+    k:SK, l:SKINS[s].label, h:String(i+1), s:"skin habillage theme design " + s,
+    a:()=>{ closeOv(); applySkin(s); }
+  })).concat([
+    {k:GO, l:t("rail.hero"),     h:"G H", a:()=>go("#hero")},
+    {k:GO, l:t("rail.overview"), h:"",    a:()=>go("#overview")},
+    {k:GO, l:t("rail.projects"), h:"G P", a:()=>go("#projects")},
+    {k:GO, l:t("rail.stack"),    h:"",    a:()=>go("#stack")},
+    {k:GO, l:t("rail.contact"),  h:"G C", a:()=>go("#contact")},
+    {k:"001", l:t("p1.title"), h:"", s:"solana telegram bot jupiter helius swap trading token", a:()=>go("#d1")},
+    {k:"002", l:t("p2.title"), h:"", s:"polymarket arbitrage clob gamma scanner alerte alert edge", a:()=>go("#d2")},
+    {k:"003", l:t("p3.title"), h:"", s:"osm openstreetmap overpass csv natkina scraper prospection", a:()=>go("#d3")},
+    {k:RUN, l:t("k.copy"), h:"C", a:copyEmail},
+    {k:RUN, l:t("k.t"),    h:"T", a:toggleTheme},
+    {k:RUN, l:t("k.l"),    h:"L", a:()=> applyLang(lang === "fr" ? "en" : "fr")},
+    {k:RUN, l:t("ui.replay")  + " · 001", h:"", a:()=>{ go("#d1"); tgStarted = true; playTelegram(); }},
+    {k:RUN, l:t("ui.shuffle") + " · 002", h:"", a:()=>{ go("#d2"); shuffleMarket(); }},
+    {k:RUN, l:t("ui.run")     + " · 003", h:"", a:()=>{ go("#d3"); osmRun(); }},
+    {k:RUN, l:t("foot.print"),    h:"", a:()=> window.print()},
+    {k:RUN, l:t("ui.keysTitle"),  h:"?", a:()=> openOv("#help")},
+    {k:LNK, l:"GitHub · fre7co",   h:"↗", a:()=> window.open("https://github.com/fre7co","_blank","noopener")},
+    {k:LNK, l:"Telegram · fre7co", h:"↗", a:()=> window.open("https://t.me/fre7co","_blank","noopener")},
+    {k:LNK, l:EMAIL, h:"↗", a:()=>{ location.href = "mailto:" + EMAIL; }}
+  ]);
+  if($("#palette").classList.contains("open")) palRender($("#palInput").value);
+}
+function go(sel){
+  closeOv();
+  const el = document.querySelector(sel);
+  if(el) el.scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block:"start"});
+}
+function palRender(q){
+  q = (q || "").trim().toLowerCase();
+  palFiltered = q ? PAL.filter(p => (p.k + " " + p.l + " " + (p.s || "")).toLowerCase().indexOf(q) > -1) : PAL.slice();
+  palSel = 0;
+  const list = $("#palList");
+  if(!palFiltered.length){
+    list.innerHTML = '<div class="pal-empty">' + (lang === "fr" ? "Aucun résultat" : "No results") + "</div>";
+    return;
+  }
+  list.innerHTML = palFiltered.map((p,i)=>
+    '<div class="pal-item' + (i === 0 ? " sel" : "") + '" data-i="' + i + '"><span class="k">' + p.k + '</span><span>' + p.l + '</span><span class="h">' + p.h + "</span></div>"
+  ).join("");
+  $$(".pal-item", list).forEach(el=>{
+    el.addEventListener("mouseenter", ()=>{ palSel = +el.dataset.i; palMark(); });
+    el.addEventListener("click", ()=>{ palFiltered[+el.dataset.i].a(); });
+  });
+}
+function palMark(){
+  $$("#palList .pal-item").forEach((el,i)=> el.classList.toggle("sel", i === palSel));
+  const sel = $("#palList .pal-item.sel");
+  if(sel) sel.scrollIntoView({block:"nearest"});
+}
+function openOv(sel){
+  closeOv();
+  $(sel).classList.add("open");
+  if(sel === "#palette"){ const i = $("#palInput"); i.value = ""; palRender(""); setTimeout(()=> i.focus(), 20); }
+}
+function closeOv(){ $$(".overlay").forEach(o=> o.classList.remove("open")); }
+
+/* ═══════════ Clavier ═══════════ */
+let gPending = false, gTimer = null;
+function keys(e){
+  const inField = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  const palOpen = $("#palette").classList.contains("open");
+
+  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k"){ e.preventDefault(); openOv("#palette"); return; }
+  if(e.key === "Escape"){ closeOv(); return; }
+
+  if(palOpen){
+    if(e.key === "ArrowDown"){ e.preventDefault(); palSel = Math.min(palFiltered.length-1, palSel+1); palMark(); }
+    else if(e.key === "ArrowUp"){ e.preventDefault(); palSel = Math.max(0, palSel-1); palMark(); }
+    else if(e.key === "Enter"){ e.preventDefault(); if(palFiltered[palSel]) palFiltered[palSel].a(); }
+    return;
+  }
+  if(inField || e.metaKey || e.ctrlKey || e.altKey) return;
+
+  const k = e.key.toLowerCase();
+  if(gPending){
+    gPending = false; clearTimeout(gTimer);
+    if(k === "h") go("#hero");
+    else if(k === "p") go("#projects");
+    else if(k === "c") go("#contact");
+    else if(k === "s") go("#stack");
+    else if(k === "o") go("#overview");
+    return;
+  }
+  if(k === "g"){ gPending = true; gTimer = setTimeout(()=> gPending = false, 900); return; }
+  if(k >= "1" && k <= "4"){ applySkin(SKIN_ORDER[+k - 1]); return; }
+  if(k === "s"){ cycleSkin(1); }
+  else if(k === "t"){ toggleTheme(); }
+  else if(k === "l"){ applyLang(lang === "fr" ? "en" : "fr"); }
+  else if(k === "c"){ copyEmail(); }
+  else if(e.key === "?" || (e.shiftKey && k === "/")){ openOv("#help"); }
+}
+
+/* ═══════════ Démarrage général ═══════════ */
+(function init(){
+  applyLang(lang, true);
+  applySkin(skin, {silent:true});
+  boot();
+  tick(); setInterval(tick, 1000);
+  $("#year").textContent = String(new Date().getFullYear());
+
+  osmGrid();
+  observe();
+  network();
+  onScroll();
+
+  window.addEventListener("scroll", onScroll, {passive:true});
+  window.addEventListener("resize", onScroll, {passive:true});
+  document.addEventListener("keydown", keys);
+
+  $$("#skins button").forEach(b=> b.addEventListener("click", ()=> applySkin(b.dataset.skinBtn)));
+  $("#skinCycle").addEventListener("click", ()=> cycleSkin(1));
+  $("#btnPal").addEventListener("click", ()=> openOv("#palette"));
+  $("#btnTheme").addEventListener("click", toggleTheme);
+  $("#btnLang").addEventListener("click", ()=> applyLang(lang === "fr" ? "en" : "fr"));
+  $("#btnCopy").addEventListener("click", copyEmail);
+  $("#btnHelp").addEventListener("click", ()=> openOv("#help"));
+  $("#btnPrint").addEventListener("click", ()=> window.print());
+  $("#btnTop").addEventListener("click", ()=> go("#hero"));
+  $("#palInput").addEventListener("input", e=> palRender(e.target.value));
+  $$(".overlay").forEach(o=> o.addEventListener("mousedown", e=>{ if(e.target === o) closeOv(); }));
+
+  $("#tgReplay").addEventListener("click", ()=>{ tgStarted = true; playTelegram(); });
+  $("#mkRand").addEventListener("click", shuffleMarket);
+  $("#osmRun").addEventListener("click", osmRun);
+  $$("#osmTabs .osm-tab").forEach(b=> b.addEventListener("click", ()=>{
+    $$("#osmTabs .osm-tab").forEach(x=> x.classList.remove("on"));
+    b.classList.add("on");
+    osmTag = b.dataset.tag;
+    osmRun();
+  }));
+
+  if("IntersectionObserver" in window){
+    const once = new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(!e.isIntersecting) return;
+        once.unobserve(e.target);
+        if(e.target.id === "d1"){ tgStarted = true; playTelegram(); }
+        if(e.target.id === "d3"){ setTimeout(osmRun, 250); }
+      });
+    },{threshold:.25});
+    ["#d1","#d3"].forEach(s=>{ const el = $(s); if(el) once.observe(el); });
+  } else { tgStarted = true; playTelegram(); osmRun(); }
+
+  // Survol d'une techno : la surligner partout où elle apparaît.
+  document.addEventListener("mouseover", e=>{
+    const tg = e.target.closest && e.target.closest(".tag");
+    if(!tg) return;
+    const name = tg.textContent.trim().toLowerCase();
+    $$(".tag").forEach(x=> x.classList.toggle("hit", x.textContent.trim().toLowerCase() === name));
+  });
+  document.addEventListener("mouseout", e=>{
+    if(e.target.closest && e.target.closest(".tag")) $$(".tag").forEach(x=> x.classList.remove("hit"));
+  });
+})();
+</script>
+</body>
+</html>
