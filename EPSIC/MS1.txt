@@ -1,0 +1,107 @@
+INFO 
+Mise en situation d’un formulaire IT  
+1. Formulaire de demande d’accès IT 
+Vous travaillez au service informatique d’une entreprise de 500 employés. 
+L’entreprise possède des bureaux en Suisse, à Paris et à Berlin. 
+Elle souhaite mettre en place un nouveau formulaire permettant aux collaborateurs de 
+demander un accès à une application interne. 
+Votre chef profite de cette occasion pour vous demander de vérifier que ce nouveau formulaire 
+respecte les règles applicables en matière de protection des données, notamment la LPD et le 
+RGPD. 
+Il vous propose de collecter les informations suivantes : 
+• Nom 
+• Prénom 
+• Âge 
+• Date de naissance 
+• Sexe 
+• Nationalité 
+• Religion 
+• Situation familiale 
+• Adresse privée 
+• Numéro de téléphone privé 
+• Adresse e-mail personnelle 
+• Adresse e-mail professionnelle 
+• Département 
+• Fonction 
+• Date d’embauche 
+• Numéro d’employé 
+• Nom du responsable hiérarchique 
+• Application demandée 
+• Niveau d’accès demandé 
+• Justification de la demande 
+• Adresse IP du poste de travail 
+• Nom du poste de travail 
+• Numéro de série du poste 
+• Photo de l’employé 
+• Copie de la carte d’identité 
+• Numéro AVS 
+• Informations concernant d’éventuelles sanctions disciplinaires 
+• Informations concernant d’éventuels problèmes de santé 
+• Appartenance syndicale 
+• Date et heure de la demande 
+Auteur : NP 
+Page 1 sur 5 
+Date : 31.08.2026 
+INFO 
+Mise en situation d’un formulaire IT  
+Travail demandé 
+Par groupe de 2 ou 3, analysez cette collecte de données en répondant aux questions 
+suivantes.
+ 
+1) Quelles lois s’appliquent selon le lieu de travail du collaborateur ? 
+Suisse : LPD
+Paris et Berlin (UE) : RGPD
+
+2) Quelles informations de la liste sont des données personnelles ? 
+Toutes, car elles se rapportent à une personne physique identifiée ou identifiable.
+
+3) Classez les données dans l’une des trois catégories suivantes : Nécessaire, Peut-être 
+nécessaire, Inutile. 
+Nécessaire : Nom, Prénom, Département, Fonction, Application demandée, Niveau d’accès, Justification, E-mail professionnel, Date et heure de la demande.
+Peut-être nécessaire : Adresse IP, Nom du poste, Numéro de série, Numéro d’employé, Nom du responsable.
+Inutile : Âge, Date de naissance, Sexe, Nationalité, Religion, Situation familiale, Adresse privée, Téléphone privé, E-mail perso, Date d’embauche, Photo, Copie CNI, Numéro AVS, Sanctions, Problèmes de santé, Appartenance syndicale
+
+4) Pour chaque donnée classée comme « Nécessaire » et « Peut-être nécessaire », 
+expliquez pourquoi elle doit ou pourrait être collectée. 
+Nécessaire : pour identifier le demandeur, vérifier son rôle, traiter la demande, communiquer et tracer la requête.
+Peut-être nécessaire : pour des besoins de sécurité (IP, poste), d’identification interne (numéro employé) ou de validation hiérarchique.
+
+5) Y a-t-il des données sensibles dans la liste ? Si oui, lesquelles ? 
+Oui : Religion, Appartenance syndicale, Problèmes de santé, Copie de carte d’identité, Numéro AVS.
+
+6) Qui devrait pouvoir accéder aux informations collectées ? 
+Support IT (traitement).
+Responsable hiérarchique (validation, si besoin).
+RSSI (données techniques pour audit).
+Pas les RH ni d’autres services sans nécessité.
+
+7) Combien de temps les informations devraient-elles être conservées ? 
+Pendant la durée de la demande, puis 2 ans après sa clôture (au maximum). Supprimer en fin de contrat de travail.
+
+8) Proposez 3 mesures permettant de protéger les données collectées et expliquez 
+brièvement à quoi elles servent. 
+Chiffrement (HTTPS et base de données) : protéger les données en transit et au repos.
+
+Contrôle d’accès par rôles : limiter l’accès aux seuls habilités.
+
+Journalisation des accès : tracer qui consulte/modifie les données pour détecter des intrusions.
+
+
+Auteur : NP 
+Page 2 sur 5 
+Date : 31.08.2026 
+INFO 
+Mise en situation d’un formulaire IT  
+Auteur : NP 
+Page 3 sur 5 
+Date : 31.08.2026 
+INFO 
+Mise en situation d’un formulaire IT  
+Auteur : NP 
+Page 4 sur 5 
+Date : 31.08.2026 
+INFO 
+Mise en situation d’un formulaire IT  
+Auteur : NP 
+Page 5 sur 5 
+Date : 31.08.2026 
