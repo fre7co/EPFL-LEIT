@@ -1,0 +1,53 @@
+http_port 3128
+visible_hostname ubuntu-whitelist
+
+acl SSL_ports port 443
+acl Safe_ports port 80
+acl Safe_ports port 443
+acl CONNECT method CONNECT
+acl localnet src 127.0.0.1/32
+
+# --- Galaxus ---
+acl allowed_domains dstdomain .galaxus.ch
+acl allowed_domains dstdomain .galaxus.com
+acl allowed_domains dstdomain .digitec.ch
+acl allowed_domains dstdomain .dgstatic.com
+acl allowed_domains dstdomain .cloudfront.net
+acl allowed_domains dstdomain .akamaihd.net
+acl allowed_domains dstdomain .akamai.net
+
+# --- YouTube ---
+acl allowed_domains dstdomain .youtube.ch
+acl allowed_domains dstdomain .youtube.com
+acl allowed_domains dstdomain .youtu.be
+acl allowed_domains dstdomain .googlevideo.com
+acl allowed_domains dstdomain .ytimg.com
+acl allowed_domains dstdomain .ggpht.com
+acl allowed_domains dstdomain .gstatic.com
+acl allowed_domains dstdomain .googleapis.com
+acl allowed_domains dstdomain .googleusercontent.com
+acl allowed_domains dstdomain accounts.google.com
+acl allowed_domains dstdomain apis.google.com
+
+# --- Notion ---
+acl allowed_domains dstdomain .notion.com
+acl allowed_domains dstdomain .notion.so
+acl allowed_domains dstdomain .notion-static.com
+acl allowed_domains dstdomain .notionusercontent.com
+acl allowed_domains dstdomain .notion.site
+acl allowed_domains dstdomain s3.us-west-2.amazonaws.com
+acl allowed_domains dstdomain s3.amazonaws.com
+acl allowed_domains dstdomain .jsdelivr.net
+acl allowed_domains dstdomain .unpkg.com
+acl allowed_domains dstdomain .intercomcdn.com
+acl allowed_domains dstdomain .intercom.io
+acl allowed_domains dstdomain .segment.io
+acl allowed_domains dstdomain .amplitude.com
+acl allowed_domains dstdomain .sentry.io
+acl allowed_domains dstdomain .stripe.com
+acl allowed_domains dstdomain .hcaptcha.com
+
+# --- Règles ---
+http_access deny CONNECT !SSL_ports
+http_access allow localnet allowed_domains Safe_ports
+http_access deny all
