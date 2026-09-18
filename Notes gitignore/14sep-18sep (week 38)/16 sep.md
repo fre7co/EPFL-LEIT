@@ -1,0 +1,1 @@
+School, as usual, basic staff, english, math, we had a test on math, etc

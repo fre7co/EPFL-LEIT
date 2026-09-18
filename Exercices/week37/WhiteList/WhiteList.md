@@ -39,3 +39,4 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install squid conntrack -y
 sudo systemctl restart squid
 sudo systemctl enable squid
+    

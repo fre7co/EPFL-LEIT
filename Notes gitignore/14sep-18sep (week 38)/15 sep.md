@@ -1,0 +1,1 @@
+Raspberry PI, docker, a lot of documentation, screen sharing on Raspberry PI, i downloaded a little LLM model on Raspberry PI by myself, qwen 4B
