@@ -1,0 +1,1 @@
+updated sti-toolbox.epfl.ch , redesigned again, learned IT Project Lifecycle (Waterfall variant), had a meeting with leads of teams of STI-IT, gathered function requirements about openproject project, to track tasks. Was hard, communication was not easy, but with the time it went easier, i really liked it

@@ -1,0 +1,1 @@
+NAS servers, RAID, synology, connection to ssh, user permissions, backed up the whole disk

@@ -1,0 +1,1 @@
+typical day at EPSIC, nothing new, just had a test about Culture Generale
